@@ -66,7 +66,7 @@ This Repository constitutes a body of work representing my solution to the asses
 
 ## How to Test
 
-- To Test the [running demo api](https://tonic-backend-api.up.railway.app/heath-check) download and import [this collection](./Tonic-api.postman_collection.json) and [this environment](./Tonic%20Api%20Staging.postman_environment.json) into Postman.
+- To Test the [running demo api](https://tonic-backend-api.up.railway.app/heath-check) download and import [this collection](https://drive.google.com/file/d/1aljJV3wdEl4is6-6EUNwsdaZwKt05mV-/view?usp=sharing) and [this environment](https://drive.google.com/file/d/1qK9LvqpVuVvp2hHSWRC4IIRTDw5f4xBX/view?usp=sharing) into Postman.
 
 - To Test locally, clone the repository and follow the steps in either [Running with Docker](#running-with-docker) or [Running On Local](#running-locally) or  to run on those environments respectively. Download and import the aforementioned collection and environment into postman, but change the `baseurl` environment variable to `http://localhost:3000`
 
@@ -337,4 +337,4 @@ DELETE `<BaseURL>/api/v1/user/beneficiary/<accountId>`
 
 GET `<BaseURL>/api/v1/admin/users` _[Requires Authentication, ADMIN Role]_
 
-Several other endpoints can be viewed and tested in the [Postman Collection](./Tonic-api.postman_collection.json)
+Several other endpoints can be viewed and tested in the [Postman Collection](https://drive.google.com/file/d/1aljJV3wdEl4is6-6EUNwsdaZwKt05mV-/view?usp=sharing)
