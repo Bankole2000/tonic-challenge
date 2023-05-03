@@ -51,7 +51,7 @@ This Repository constitutes a body of work representing my solution to the asses
     - [x] limiting request per time from IP address
     - [x] requiring dynamically configuratble transaction cooldown to prevent duplicate transactions
   - [x] API Versioning is implemented - 2 kinds:
-    - [x] Route-based versioning (combined with versioned file structure to illustrate how version change management)
+    - [x] Route-based versioning (combined with version in file/folder structure to illustrate how version change management may be implemented)
     - [x] Semantic Versioning (combined with auto-generated [Change Logs](./CHANGELOG.md) and [Release Tags](https://github.com/Bankole2000/tonic-challenge/tags)) to demonstrate version release management.
 
 - Additional QC/QoL (Quality Control / Quality of life) benefits / nice to haves implemented:
