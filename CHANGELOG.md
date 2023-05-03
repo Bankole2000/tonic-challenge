@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.1](https://github.com/Bankole2000/tonic-challenge/compare/v1.1.0...v1.1.1) (2023-05-03)
+
+
+### Bug Fixes
+
+* typos in readme ([a8c508f](https://github.com/Bankole2000/tonic-challenge/commit/a8c508f17daa0b500b8f75b28758849e385e4c77))
+
 ## [1.1.0](https://github.com/Bankole2000/tonic-challenge/compare/v1.0.1...v1.1.0) (2023-05-03)
 
 
