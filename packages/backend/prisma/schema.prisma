@@ -36,11 +36,12 @@ model Session {
 }
 
 model UserHasBeneficiary {
-  id        String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId    String  @db.ObjectId
-  user      User    @relation("Benefactor", fields: [userId], references: [id], onDelete: Cascade)
-  accountId String  @db.ObjectId
-  account   Account @relation("BeneficiaryAccount", fields: [accountId], references: [id], onDelete: Cascade)
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  user      User     @relation("Benefactor", fields: [userId], references: [id], onDelete: Cascade)
+  accountId String   @db.ObjectId
+  account   Account  @relation("BeneficiaryAccount", fields: [accountId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
 }
 
 model Account {

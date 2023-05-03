@@ -10,6 +10,8 @@ WORKDIR /app
 COPY package.json .
 COPY tsconfig.json .
 
+RUN npm cache verify
+
 RUN npm install
 
 COPY . .

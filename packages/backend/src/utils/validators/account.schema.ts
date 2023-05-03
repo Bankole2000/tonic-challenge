@@ -1,4 +1,6 @@
-import { number, object, string } from 'zod';
+import {
+  boolean, number, object, string
+} from 'zod';
 import { isNotEmpty, isNumbersOnly, isValidObjectId } from '../helpers/validators';
 
 export const createAccountSchema = object({
@@ -49,6 +51,9 @@ export const transferSchema = object({
     }).min(100, 'Minimum transfer amount is 100kobo (1 Naira)'),
     description: string({
       invalid_type_error: 'Description must be a string'
+    }).optional(),
+    save: boolean({
+      invalid_type_error: 'save must be a boolean'
     }).optional()
   })
 });

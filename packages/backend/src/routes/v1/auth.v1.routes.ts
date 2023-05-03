@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { defaultHandler } from '../../controllers/default.controllers';
 import { validate } from '../../middleware/v1/zodValidate.v1.middleware';
 import { loginSchema, registerSchema } from '../../utils/validators/auth.schema';
 import {

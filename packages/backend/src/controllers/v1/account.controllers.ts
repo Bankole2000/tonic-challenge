@@ -6,8 +6,10 @@ import { getIO } from '../../lib/socketIO';
 import { socketEventTypes } from '../../utils/validators/socketEvents.schema';
 import CacheService from '../../services/v1/cache.service';
 import { serverErrorMessage } from '../../utils/helpers/utilityFxns';
+import UserDBService from '../../services/v1/user.service';
 
 const accountService = new AccountDBService();
+const userService = new UserDBService();
 
 export const getAccountDetailsHandler = async (req: Request, res: Response) => {
   const { accountId } = req.params;
@@ -190,7 +192,9 @@ export const accountWithdrawalHandler = async (req: Request, res: Response) => {
 
 export const transferHandler = async (req: Request, res: Response) => {
   const { accountId: originAccountId } = req.params;
-  const { amount, description, destinationAccountId } = req.body;
+  const {
+    amount, description, destinationAccountId, save
+  } = req.body;
   if (originAccountId === destinationAccountId) {
     const sr = new ServiceResponse(
       'Cannot transfer to the same account',
@@ -294,6 +298,11 @@ export const transferHandler = async (req: Request, res: Response) => {
     getIO()
       .to(completedTransfer.destinationAccount.user.id)
       .emit(socketEventTypes.ACCOUNT_CREDITED, recieverCreditTxn);
+  }
+
+  if (save) {
+    await userService
+      .saveBeneficiaryAccount(res.locals.user.id, destinationAccountId);
   }
 
   const sr = new ServiceResponse(

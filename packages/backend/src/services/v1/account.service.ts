@@ -315,4 +315,37 @@ export default class AccountDBService {
       return { data: null, error, code: 500 };
     }
   }
+
+  async getAllAccounts(page = 1, limit = 25) {
+    try {
+      const accounts = await this.prisma.account.findMany({
+        take: limit,
+        skip: (page - 1) * limit,
+        include: {
+          user: {
+            select: {
+              firstname: true,
+              lastname: true,
+              id: true,
+            }
+          },
+          bank: true
+        }
+      });
+      const total = await this.prisma.account.count();
+      const pages = Math.ceil(total / limit) || 1;
+      const prev = pages > 1 && page <= pages && page > 0 ? page - 1 : null;
+      const next = pages > 1 && page < pages && page > 0 ? page + 1 : null;
+      return {
+        data: {
+          data: accounts, pages, page, prev, next, total
+        },
+        error: null,
+        code: 200
+      };
+    } catch (error: any) {
+      console.log({ error });
+      return { data: null, error, code: 500 };
+    }
+  }
 }

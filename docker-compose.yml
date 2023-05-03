@@ -1,6 +1,8 @@
-version: '3'
+version: '3.8'
 services:
   frontend: 
+    depends_on:
+      - backend
     container_name: tonic-frontend
     restart: always
     build: 
@@ -12,13 +14,27 @@ services:
       - mongo
       - redis
   backend:
+    depends_on:
+      - mongo
+      - redis
     container_name: tonic-backend
     restart: always
     build: 
-      context: ./packages/frontend
+      context: ./packages/backend
       dockerfile: dockerfile
     ports:
       - '3000:3000'
+    environment:
+      - PORT=3000
+      - DATABASE_URL=mongodb://mongo:mongo@mongo:27017/tonic-db?authSource=admin&directConnection=true
+      - REDIS_URL=redis://:redis@redis:6379
+      - JWT_SECRET=tonic-api-secret
+      - ADMIN_EMAIL=admin@test.com
+      - ACCESS_TOKEN_TTL=15m
+      - ACCESS_TOKEN_TTL_MS=900000
+      - REFRESH_TOKEN_TTL=1d
+      - REFRESH_TOKEN_TTL_MS=86400000
+      - TRANSACTION_COOLDOWN=5
     external_links:
       - mongo
       - redis
@@ -27,8 +43,24 @@ services:
     image: bitnami/mongodb
     ports:
       - '27017:27017'
+    environment:
+      - MONGODB_ADVERTISED_HOSTNAME=127.0.0.1
+      - MONGODB_REPLICA_SET_MODE=primary
+      - MONGODB_ROOT_USER=mongo
+      - MONGODB_ROOT_PASSWORD=mongo
+      - MONGODB_REPLICA_SET_KEY=replicasetkey123
+    volumes:
+      - 'mongo-db:/bitnami/mongodb'
   redis: 
     container_name: redis
     image: redis
+    command: redis-server --save 20 1 --loglevel warning --requirepass redis
     ports: 
       - '6379:6379'
+    volumes: 
+      - cache:/data
+
+volumes:
+  mongo-db:
+  cache:
+    driver: local

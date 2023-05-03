@@ -138,6 +138,50 @@ export const deleteAccountHandler = async (req: Request, res: Response) => {
   return res.status(sr.statusCode).send(sr);
 };
 
+export const getBeneficiariesHandler = async (req: Request, res: Response) => {
+  const { user } = res.locals;
+  const { q: searchTerm } = req.query;
+  let limit: number;
+  let page: number;
+  if (parseInt(req.query.limit as string, 10)) {
+    limit = parseInt(req.query.limit as string, 10);
+  } else {
+    limit = 25;
+  }
+  if (parseInt(req.query.page as string, 10)) {
+    page = parseInt(req.query.page as string, 10);
+  } else {
+    page = 1;
+  }
+  if (searchTerm) {
+    const { data, error, code } = await userService
+      .searchBeneficiaries(user.id, searchTerm as string, page, limit);
+    const sr = error ? serverErrorMessage(error, code) : new ServiceResponse(
+      'Beneficiary search results',
+      data,
+      true,
+      code,
+      null,
+      null,
+      null,
+      res.locals.newAccessToken
+    );
+    return res.status(sr.statusCode).send(sr);
+  }
+  const { data, error, code } = await userService.getUserBeneficiaries(user.id, page, limit);
+  const sr = error ? serverErrorMessage(error, code) : new ServiceResponse(
+    'Your Beneficiaries',
+    data,
+    true,
+    code,
+    null,
+    null,
+    null,
+    res.locals.newAccessToken
+  );
+  return res.status(sr.statusCode).send(sr);
+};
+
 export const addBeneficiaryAccountHandler = async (req: Request, res: Response) => {
   const sr = new ServiceResponse('Not implemented', null, true, 200, null, null, null, null);
   return res.status(sr.statusCode).send(sr);

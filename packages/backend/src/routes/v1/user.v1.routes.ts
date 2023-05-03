@@ -4,8 +4,10 @@ import { createAccountSchema } from '../../utils/validators/account.schema';
 import {
   createNewAccountHandler,
   deleteAccountHandler,
+  getBeneficiariesHandler,
   getUserAccountsHandler,
   getUserTransactionsHandler,
+  removeBeneficiaryAccountHandler,
   updateProfileHandler
 } from '../../controllers/v1/user.controllers';
 import { requireAccountStatus } from '../../middleware/v1/auth.v1.middleware';
@@ -19,5 +21,7 @@ userRoutes.patch('/kyc', validate(updateProfileSchema, 'Profile Update'), update
 userRoutes.post('/accounts', requireAccountStatus(['COMPLETE', 'NEEDS_ACCOUNT']), validate(createAccountSchema, 'Create Account'), createNewAccountHandler); // Add new user account
 userRoutes.delete('/accounts/:accountId', checkUserOwnsAccount, deleteAccountHandler); // delete User account
 userRoutes.get('/transactions', getUserTransactionsHandler);
+userRoutes.get('/beneficiaries', getBeneficiariesHandler);
+userRoutes.delete('/beneficiary/:accountId', removeBeneficiaryAccountHandler);
 
 export default userRoutes;

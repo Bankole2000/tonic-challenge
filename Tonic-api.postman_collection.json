@@ -1,0 +1,946 @@
+{
+	"info": {
+		"_postman_id": "8f85aa71-6eaa-4c95-ab85-4e6ea7040ef0",
+		"name": "Tonic-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "7372845"
+	},
+	"item": [
+		{
+			"name": "v1",
+			"item": [
+				{
+					"name": "Auth",
+					"item": [
+						{
+							"name": "Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);\r",
+											"if(jsonData.data){\r",
+											"    if(jsonData.data.accessToken){\r",
+											"        pm.environment.set(\"accessToken\", jsonData.data.accessToken);\r",
+											"    }\r",
+											"    if(jsonData.data.refreshToken){\r",
+											"        pm.environment.set(\"refreshToken\", jsonData.data.refreshToken);\r",
+											"    }\r",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"test@test.com\",\n  \"password\": \"newPassword\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}{{v1path}}/auth/login",
+									"host": [
+										"{{baseurl}}{{v1path}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Register",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);\r",
+											"if(jsonData.data){\r",
+											"    if(jsonData.data.accessToken){\r",
+											"        pm.environment.set(\"accessToken\", jsonData.data.accessToken);\r",
+											"    }\r",
+											"    if(jsonData.data.refreshToken){\r",
+											"        pm.environment.set(\"refreshToken\", jsonData.data.refreshToken);\r",
+											"    }\r",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"test@test.com\",\n  \"password\": \"newPassword\",\n  \"confirmPassword\": \"newPassword\",\n  \"tos\": true\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}{{v1path}}/auth/register",
+									"host": [
+										"{{baseurl}}{{v1path}}"
+									],
+									"path": [
+										"auth",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Me (Current User)",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}{{v1path}}/auth/me",
+									"host": [
+										"{{baseurl}}{{v1path}}"
+									],
+									"path": [
+										"auth",
+										"me"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Logout",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);\r",
+											"if(jsonData.status == 200){\r",
+											"        pm.environment.set(\"accessToken\", null);\r",
+											"        pm.environment.set(\"refreshToken\", null);\r",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}{{v1path}}/auth/logout",
+									"host": [
+										"{{baseurl}}{{v1path}}"
+									],
+									"path": [
+										"auth",
+										"logout"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Admin (WIP)",
+					"item": [
+						{
+							"name": "Manage Users",
+							"item": [
+								{
+									"name": "Get Users",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseurl}}{{v1path}}/admin/users?q=&page=1&limit=2",
+											"host": [
+												"{{baseurl}}{{v1path}}"
+											],
+											"path": [
+												"admin",
+												"users"
+											],
+											"query": [
+												{
+													"key": "q",
+													"value": "",
+													"description": "Search by email, firstname or lastname, leave empty to get all users paginated"
+												},
+												{
+													"key": "page",
+													"value": "1",
+													"description": "Page to request"
+												},
+												{
+													"key": "limit",
+													"value": "2",
+													"description": "Amount per page"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Add User",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"email\": \"\",\n  \"password\": \"\",\n  \"confirmPassword\": \"\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseurl}}{{v1path}}/admin/users",
+											"host": [
+												"{{baseurl}}{{v1path}}"
+											],
+											"path": [
+												"admin",
+												"users"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update User",
+									"request": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"firstname\": \"\",\n  \"lastname\": \"\",\n  \"bvn\": \"\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseurl}}{{v1path}}/admin/users/:userId",
+											"host": [
+												"{{baseurl}}{{v1path}}"
+											],
+											"path": [
+												"admin",
+												"users",
+												":userId"
+											],
+											"variable": [
+												{
+													"key": "userId",
+													"value": ""
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete User",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseurl}}{{v1path}}/admin/users/:userId",
+											"host": [
+												"{{baseurl}}{{v1path}}"
+											],
+											"path": [
+												"admin",
+												"users",
+												":userId"
+											],
+											"variable": [
+												{
+													"key": "userId",
+													"value": "6450c5b3e103539b2a208024"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get User Accounts",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseurl}}{{v1path}}/admin/users/:userId/accounts",
+											"host": [
+												"{{baseurl}}{{v1path}}"
+											],
+											"path": [
+												"admin",
+												"users",
+												":userId",
+												"accounts"
+											],
+											"variable": [
+												{
+													"key": "userId",
+													"value": "6450c5b3e103539b2a208024"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get User Transactions",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseurl}}{{v1path}}/admin/users/:userId/transactions",
+											"host": [
+												"{{baseurl}}{{v1path}}"
+											],
+											"path": [
+												"admin",
+												"users",
+												":userId",
+												"transactions"
+											],
+											"variable": [
+												{
+													"key": "userId",
+													"value": "6450c5b3e103539b2a208024"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Add User Role",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"url": {
+											"raw": "{{baseurl}}{{v1path}}/admin/users/:userId/roles",
+											"host": [
+												"{{baseurl}}{{v1path}}"
+											],
+											"path": [
+												"admin",
+												"users",
+												":userId",
+												"roles"
+											],
+											"variable": [
+												{
+													"key": "userId",
+													"value": ""
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Remove User Role",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseurl}}{{v1path}}/admin/users/:userId/roles",
+											"host": [
+												"{{baseurl}}{{v1path}}"
+											],
+											"path": [
+												"admin",
+												"users",
+												":userId",
+												"roles"
+											],
+											"variable": [
+												{
+													"key": "userId",
+													"value": ""
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Manage Accounts",
+							"item": [
+								{
+									"name": "Get Accounts",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseurl}}{{v1path}}/admin/accounts",
+											"host": [
+												"{{baseurl}}{{v1path}}"
+											],
+											"path": [
+												"admin",
+												"accounts"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Find Account",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": ""
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create Account for User",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"url": {
+											"raw": ""
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete User Account",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": ""
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Deposit into account",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": ""
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Withdraw from account",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": ""
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Account Transactions",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": ""
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Transfer Between Accounts",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": ""
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Reverse Transfer",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": ""
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Manage Transactions",
+							"item": [
+								{
+									"name": "Get Transactions",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": ""
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Reverse Transaction",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": ""
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "User",
+					"item": [
+						{
+							"name": "Update Profile",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"firstname\": \"James\",\n  \"lastname\": \"Bond\",\n  \"bvn\": \"12345678901\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}{{v1path}}/user/kyc",
+									"host": [
+										"{{baseurl}}{{v1path}}"
+									],
+									"path": [
+										"user",
+										"kyc"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Accounts",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}{{v1path}}/user/accounts",
+									"host": [
+										"{{baseurl}}{{v1path}}"
+									],
+									"path": [
+										"user",
+										"accounts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Transactions",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}{{v1path}}/user/transactions?from={{$randomDatePast}}&to={{$randomDateFuture}}&page=1&limit=20",
+									"host": [
+										"{{baseurl}}{{v1path}}"
+									],
+									"path": [
+										"user",
+										"transactions"
+									],
+									"query": [
+										{
+											"key": "from",
+											"value": "{{$randomDatePast}}"
+										},
+										{
+											"key": "to",
+											"value": "{{$randomDateFuture}}"
+										},
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "limit",
+											"value": "20"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add New Bank Account",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"bankId\": \"644f4d407cf45e3a5a12b416\",\n  \"accountNumber\": \"1234567891\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}{{v1path}}/user/accounts",
+									"host": [
+										"{{baseurl}}{{v1path}}"
+									],
+									"path": [
+										"user",
+										"accounts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Account",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}{{v1path}}/user/accounts/:accountId",
+									"host": [
+										"{{baseurl}}{{v1path}}"
+									],
+									"path": [
+										"user",
+										"accounts",
+										":accountId"
+									],
+									"variable": [
+										{
+											"key": "accountId",
+											"value": "6450f1c296b280767125a485"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Beneficiary Accounts",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}{{v1path}}/user/beneficiaries?q&page=1&limit=25",
+									"host": [
+										"{{baseurl}}{{v1path}}"
+									],
+									"path": [
+										"user",
+										"beneficiaries"
+									],
+									"query": [
+										{
+											"key": "q",
+											"value": null,
+											"description": "Search term, search by firstname, lastname"
+										},
+										{
+											"key": "page",
+											"value": "1",
+											"description": "Use for pagination"
+										},
+										{
+											"key": "limit",
+											"value": "25",
+											"description": "Set no of results per page"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Accounts",
+					"item": [
+						{
+							"name": "Deposit",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"amount\": 1000000,\n  \"description\": \"Saving for the rainy day\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}{{v1path}}/account/:accountId/deposit",
+									"host": [
+										"{{baseurl}}{{v1path}}"
+									],
+									"path": [
+										"account",
+										":accountId",
+										"deposit"
+									],
+									"variable": [
+										{
+											"key": "accountId",
+											"value": "6450ee559304a655469ef98b"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Withdraw",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"amount\": 1000,\n  \"description\": \"\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}{{v1path}}/account/:accountId/withdraw",
+									"host": [
+										"{{baseurl}}{{v1path}}"
+									],
+									"path": [
+										"account",
+										":accountId",
+										"withdraw"
+									],
+									"variable": [
+										{
+											"key": "accountId",
+											"value": "6450ee559304a655469ef98b"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Transfer",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"destinationAccountId\": \"6451610c5904f2f2a3a5667e\",\n  \"amount\": 10000\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}{{v1path}}/account/:accountId/transfer",
+									"host": [
+										"{{baseurl}}{{v1path}}"
+									],
+									"path": [
+										"account",
+										":accountId",
+										"transfer"
+									],
+									"variable": [
+										{
+											"key": "accountId",
+											"value": "6450ee559304a655469ef98b"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Find User Account",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"accountNumber\": \"string\",\r\n    \"bankId\": \"string\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}{{v1path}}/account/find",
+									"host": [
+										"{{baseurl}}{{v1path}}"
+									],
+									"path": [
+										"account",
+										"find"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "System",
+					"item": [
+						{
+							"name": "Get banks",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}{{v1path}}/system/banks?q=United",
+									"host": [
+										"{{baseurl}}{{v1path}}"
+									],
+									"path": [
+										"system",
+										"banks"
+									],
+									"query": [
+										{
+											"key": "q",
+											"value": "United"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{accessToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"if(jsonData.newAccessToken){",
+							"    pm.environment.set(\"accessToken\", jsonData.newAccessToken);",
+							"}"
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "v2",
+			"item": []
+		},
+		{
+			"name": "FizzBuzz",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseurl}}/fizz-buzz",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"fizz-buzz"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Health Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseurl}}/health-check",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"health-check"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

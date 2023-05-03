@@ -387,4 +387,212 @@ export default class UserDBService {
       return { data: null, error, code: 500 };
     }
   }
+
+  async saveBeneficiaryAccount(userId: string, accountId: string) {
+    try {
+      const alreadySaved = await this.prisma.userHasBeneficiary.findFirst({
+        where: {
+          AND: [
+            {
+              userId,
+            },
+            {
+              accountId
+            }
+          ]
+        }
+      });
+      if (alreadySaved) {
+        return { data: alreadySaved, error: null, code: 200 };
+      }
+      const newlySaved = await this.prisma.userHasBeneficiary.create({
+        data: {
+          userId,
+          accountId
+        }
+      });
+      if (newlySaved) {
+        return { data: newlySaved, error: null, code: 200 };
+      }
+      return { data: null, error: 'Error Saving Beneficiary', code: 400 };
+    } catch (error: any) {
+      console.log({ error });
+      return { data: null, error, code: 500 };
+    }
+  }
+
+  async getUserBeneficiaries(userId: string, page = 1, limit = 20) {
+    try {
+      const beneficiaries = await this.prisma.userHasBeneficiary.findMany({
+        take: limit,
+        skip: (page - 1) * limit,
+        where: {
+          userId
+        },
+        include: {
+          account: {
+            include: {
+              bank: true,
+              user: {
+                select: {
+                  firstname: true,
+                  lastname: true,
+                  id: true,
+                }
+              }
+            }
+          }
+        },
+        orderBy: {
+          createdAt: 'desc'
+        }
+      });
+      const total = await this.prisma.userHasBeneficiary.count({
+        take: limit,
+        skip: (page - 1) * limit,
+        where: {
+          userId
+        },
+      });
+      const pages = Math.ceil(total / limit) || 1;
+      const prev = pages > 1 && page <= pages && page > 0 ? page - 1 : null;
+      const next = pages > 1 && page < pages && page > 0 ? page + 1 : null;
+      return {
+        data: {
+          data: beneficiaries, pages, page, prev, next, total
+        },
+        error: null,
+        code: 200
+      };
+    } catch (error: any) {
+      console.log({ error });
+      return { data: null, error, code: 500 };
+    }
+  }
+
+  async searchBeneficiaries(userId: string, searchTerm: string, page = 1, limit = 20) {
+    try {
+      const beneficiaries = await this.prisma.userHasBeneficiary.findMany({
+        take: limit,
+        skip: (page - 1) * limit,
+        where: {
+          AND: [
+            {
+              userId
+            },
+            {
+              account: {
+                user: {
+                  OR: [
+                    {
+                      firstname: {
+                        contains: searchTerm,
+                        mode: 'insensitive'
+                      }
+                    },
+                    {
+                      lastname: {
+                        contains: searchTerm,
+                        mode: 'insensitive'
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        include: {
+          account: {
+            include: {
+              bank: true,
+              user: {
+                select: {
+                  firstname: true,
+                  lastname: true,
+                  id: true,
+                }
+              }
+            }
+          }
+        },
+        orderBy: {
+          createdAt: 'desc'
+        }
+      });
+      const total = await this.prisma.userHasBeneficiary.count({
+        take: limit,
+        skip: (page - 1) * limit,
+        where: {
+          AND: [
+            {
+              userId
+            },
+            {
+              account: {
+                user: {
+                  OR: [
+                    {
+                      firstname: {
+                        contains: searchTerm,
+                        mode: 'insensitive'
+                      }
+                    },
+                    {
+                      lastname: {
+                        contains: searchTerm,
+                        mode: 'insensitive'
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+      });
+      const pages = Math.ceil(total / limit) || 1;
+      const prev = pages > 1 && page <= pages && page > 0 ? page - 1 : null;
+      const next = pages > 1 && page < pages && page > 0 ? page + 1 : null;
+      return {
+        data: {
+          data: beneficiaries, pages, page, prev, next, total
+        },
+        error: null,
+        code: 200
+      };
+    } catch (error: any) {
+      console.log({ error });
+      return { data: null, error, code: 500 };
+    }
+  }
+
+  async deleteBeneficiary(userId: string, accountId: string) {
+    try {
+      const beneficiaryExists = await this.prisma.userHasBeneficiary.findFirst({
+        where: {
+          AND: [
+            {
+              userId,
+            },
+            {
+              accountId
+            }
+          ]
+        }
+      });
+      if (beneficiaryExists) {
+        const deletedBeneficiary = await this.prisma.userHasBeneficiary.delete({
+          where: {
+            id: beneficiaryExists.id
+          }
+        });
+        return { data: deletedBeneficiary, error: null, code: 201 };
+      }
+      return { data: beneficiaryExists, error: 'Beneficiary not found', code: 404 };
+    } catch (error: any) {
+      console.log({ error });
+      return { data: null, error, code: 500 };
+    }
+  }
 }

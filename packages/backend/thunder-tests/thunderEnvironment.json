@@ -21,11 +21,11 @@
       },
       {
         "name": "accessToken",
-        "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDUwYTdiYjE5OWE2MWUxMWU0MjRiMDIiLCJzZXNzaW9uSWQiOiI2NDUxNmQ3Nzk5MzA2ODdjODRkMzMwMTYiLCJpYXQiOjE2ODMwNzEyOTIsImV4cCI6MTY4MzA3MjE5Mn0.MoUGlcNcSZ41iqWU6uaxXRwi1qNvBwxNQWMfOoKN8LY"
+        "value": ""
       },
       {
         "name": "refreshToken",
-        "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDUwYTdiYjE5OWE2MWUxMWU0MjRiMDIiLCJzZXNzaW9uSWQiOiI2NDUxNmQ3Nzk5MzA2ODdjODRkMzMwMTYiLCJpYXQiOjE2ODMwNTgwMzksImV4cCI6MTY4MzE0NDQzOX0.Ijpno44xkZ_X6vOHfnaUbG7XBWdMuPxFL0Vl03unXws"
+        "value": ""
       }
     ]
   },
@@ -36,6 +36,27 @@
     "sortNum": 20000,
     "created": "2023-05-01T06:30:55.557Z",
     "modified": "2023-05-01T06:30:55.557Z",
-    "data": []
+    "data": [
+      {
+        "name": "baseurl",
+        "value": ""
+      },
+      {
+        "name": "v1path",
+        "value": ""
+      },
+      {
+        "name": "v1path",
+        "value": ""
+      },
+      {
+        "name": "accessToken",
+        "value": ""
+      },
+      {
+        "name": "refreshToken",
+        "value": ""
+      }
+    ]
   }
 ]
