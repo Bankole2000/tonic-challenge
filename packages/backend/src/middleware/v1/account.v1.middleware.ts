@@ -1,8 +1,8 @@
-import { ServiceResponse } from "../../@types/ServiseReponse.type";
-import { NextFunction, Request, Response } from "express";
-import AccountDBService from "../../services/v1/account.service";
-import { serverErrorMessage } from "../../utils/helpers/utilityFxns";
-import { isValidObjectId } from "../../utils/helpers/validators";
+import { NextFunction, Request, Response } from 'express';
+import { ServiceResponse } from '../../@types/ServiseReponse.type';
+import AccountDBService from '../../services/v1/account.service';
+import { serverErrorMessage } from '../../utils/helpers/utilityFxns';
+import { isValidObjectId } from '../../utils/helpers/validators';
 
 const accountService = new AccountDBService();
 
@@ -11,7 +11,7 @@ export const checkUserOwnsAccount = async (req: Request, res: Response, next: Ne
   const { accountId } = req.params;
   if (!isValidObjectId(accountId)) {
     const sr = new ServiceResponse(
-      `Invalid Account Id`,
+      'Invalid Account Id',
       null,
       false,
       400,
@@ -19,14 +19,14 @@ export const checkUserOwnsAccount = async (req: Request, res: Response, next: Ne
       'Invalid Account Id',
       'Check account Id and retry',
       res.locals.newAccessToken
-    )
-    return res.status(sr.statusCode).send(sr)
+    );
+    return res.status(sr.statusCode).send(sr);
   }
   const { data: accountExists, error, code } = await accountService.getAccountDetails(accountId);
   if (!accountExists) {
-    const sr = code > 499 ? serverErrorMessage(error, code) :
-      new ServiceResponse(
-        `This account doesn't exist`,
+    const sr = code > 499 ? serverErrorMessage(error, code)
+      : new ServiceResponse(
+        'This account doesn\'t exist',
         null,
         false,
         404,
@@ -34,12 +34,12 @@ export const checkUserOwnsAccount = async (req: Request, res: Response, next: Ne
         error,
         'Check the account details and try again',
         res.locals.newAccessToken
-      )
+      );
     return res.status(sr.statusCode).send(sr);
   }
   if (user.id !== accountExists.userId) {
     const sr = new ServiceResponse(
-      `This is not your account`,
+      'This is not your account',
       null,
       false,
       403,
@@ -47,11 +47,11 @@ export const checkUserOwnsAccount = async (req: Request, res: Response, next: Ne
       'NOT_USER_ACCOUNT',
       'Check the account details and try again',
       res.locals.newAccessToken
-    )
+    );
     return res.status(sr.statusCode).send(sr);
   }
   return next();
-}
+};
 
 export const checkSufficientBalance = async (req: Request, res: Response, next: NextFunction) => {
   const { user } = res.locals;
@@ -59,7 +59,7 @@ export const checkSufficientBalance = async (req: Request, res: Response, next: 
   const { accountId } = req.params;
   if (!isValidObjectId(accountId)) {
     const sr = new ServiceResponse(
-      `Invalid Account Id`,
+      'Invalid Account Id',
       null,
       false,
       400,
@@ -67,14 +67,14 @@ export const checkSufficientBalance = async (req: Request, res: Response, next: 
       'Invalid Account Id',
       'Check account Id and retry',
       res.locals.newAccessToken
-    )
-    return res.status(sr.statusCode).send(sr)
+    );
+    return res.status(sr.statusCode).send(sr);
   }
   const { data: accountExists, error, code } = await accountService.getAccountDetails(accountId);
   if (!accountExists) {
-    const sr = code > 499 ? serverErrorMessage(error, code) :
-      new ServiceResponse(
-        `This account doesn't exist`,
+    const sr = code > 499 ? serverErrorMessage(error, code)
+      : new ServiceResponse(
+        'This account doesn\'t exist',
         null,
         false,
         404,
@@ -82,12 +82,12 @@ export const checkSufficientBalance = async (req: Request, res: Response, next: 
         error,
         'Check the account details and try again',
         res.locals.newAccessToken
-      )
+      );
     return res.status(sr.statusCode).send(sr);
   }
   if (user.id !== accountExists.userId) {
     const sr = new ServiceResponse(
-      `This is not your account`,
+      'This is not your account',
       null,
       false,
       403,
@@ -95,13 +95,13 @@ export const checkSufficientBalance = async (req: Request, res: Response, next: 
       'NOT_USER_ACCOUNT',
       'Check the account details and try again',
       res.locals.newAccessToken
-    )
+    );
     return res.status(sr.statusCode).send(sr);
   }
   if (accountExists.balance - amount < 0) {
-    console.log("insufficient funds");
+    console.log('insufficient funds');
     const sr = new ServiceResponse(
-      `Insufficient Funds`,
+      'Insufficient Funds',
       null,
       false,
       400,
@@ -109,8 +109,8 @@ export const checkSufficientBalance = async (req: Request, res: Response, next: 
       'ACCOUNT_INSUFFICIENT_BALANCE',
       'Please fund this account to perform this operation',
       res.locals.newAccessToken
-    )
+    );
     return res.status(sr.statusCode).send(sr);
   }
-  return next()
-}
+  return next();
+};

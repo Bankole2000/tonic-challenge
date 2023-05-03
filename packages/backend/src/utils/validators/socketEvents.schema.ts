@@ -1,4 +1,4 @@
-import { USER_CONNECTED_HANDLER } from "../helpers/socketEventHandlers"
+import { USER_CONNECTED_HANDLER } from '../helpers/socketEventHandlers';
 
 export const socketEventTypes = {
   ACCOUNT_DEBITED: 'ACCOUNT_DEBITED',
@@ -6,8 +6,8 @@ export const socketEventTypes = {
   USER_CONNECTED: 'USER_CONNECTED',
   PROFILE_UPDATED: 'PROFILE_UPDATED',
   LOGGED_OUT: 'LOGGED_OUT'
-}
+};
 
 export const socketEventHandlers = {
   [socketEventTypes.USER_CONNECTED]: USER_CONNECTED_HANDLER
-}
+};

@@ -17,14 +17,14 @@ export default class SessionDBService {
         include: {
           user: true
         }
-      })
+      });
       if (newSession) {
-        return { data: newSession, error: null, code: 200 }
+        return { data: newSession, error: null, code: 200 };
       }
-      return { data: null, error: 'Error creating user session', code: 400 }
+      return { data: null, error: 'Error creating user session', code: 400 };
     } catch (error: any) {
       console.log({ error });
-      return { data: null, error, code: 500 }
+      return { data: null, error, code: 500 };
     }
   }
 
@@ -44,9 +44,9 @@ export default class SessionDBService {
         include: {
           user: true
         }
-      })
+      });
       if (session) {
-        return { data: session, error: null, code: 200 }
+        return { data: session, error: null, code: 200 };
       }
       return { data: session, error: 'Session not found', code: 404 };
     } catch (error: any) {
@@ -61,13 +61,13 @@ export default class SessionDBService {
         where: {
           id: sessionId
         }
-      })
+      });
       if (session) {
         await this.prisma.session.delete({
           where: {
             id: sessionId
           }
-        })
+        });
       }
     } catch (error: any) {
       console.log({ error });
@@ -83,17 +83,17 @@ export default class SessionDBService {
         select: {
           id: true
         }
-      })).map(x => x.id)
+      })).map((x) => x.id);
       const deleted = await this.prisma.session.deleteMany({
         where: {
           userId
         }
-      })
+      });
       console.log({ deleted });
-      return { data: sessionIds, error: null, code: 201 }
+      return { data: sessionIds, error: null, code: 201 };
     } catch (error: any) {
       console.log({ error });
-      return { data: null, error, code: 500 }
+      return { data: null, error, code: 500 };
     }
   }
 }

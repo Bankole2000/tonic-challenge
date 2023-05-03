@@ -1,4 +1,6 @@
-import { Prisma, PrismaClient, TransactionType, TransferStatus } from '@prisma/client';
+import {
+  Prisma, PrismaClient, TransactionType, TransferStatus
+} from '@prisma/client';
 import prisma from '../../lib/prisma';
 
 export default class AccountDBService {
@@ -26,13 +28,13 @@ export default class AccountDBService {
             }
           }
         }
-      })
+      });
       if (newAccount) {
-        return { data: newAccount, error: null, code: 200 }
+        return { data: newAccount, error: null, code: 200 };
       }
-      return { data: null, error: 'Error creating user bank account', code: 400 }
+      return { data: null, error: 'Error creating user bank account', code: 400 };
     } catch (error: any) {
-      return { data: null, error, code: 500 }
+      return { data: null, error, code: 500 };
     }
   }
 
@@ -44,12 +46,12 @@ export default class AccountDBService {
         }
       });
       if (deletedAccount) {
-        return { data: deletedAccount, error: null, code: 201 }
+        return { data: deletedAccount, error: null, code: 201 };
       }
-      return { data: deletedAccount, error: 'Error deleting account', code: 400 }
+      return { data: deletedAccount, error: 'Error deleting account', code: 400 };
     } catch (error: any) {
       console.log({ error });
-      return { data: null, error, code: 500 }
+      return { data: null, error, code: 500 };
     }
   }
 
@@ -78,12 +80,12 @@ export default class AccountDBService {
         }
       });
       if (accountDetails) {
-        return { data: accountDetails, error: null, code: 200 }
+        return { data: accountDetails, error: null, code: 200 };
       }
-      return { data: null, error: 'Account not found', code: 404 }
+      return { data: null, error: 'Account not found', code: 404 };
     } catch (error: any) {
       console.log({ error });
-      return { data: null, error, code: 500 }
+      return { data: null, error, code: 500 };
     }
   }
 
@@ -110,14 +112,14 @@ export default class AccountDBService {
           },
           bank: true,
         }
-      })
+      });
       if (account) {
-        return { data: account, error: null, code: 200 }
+        return { data: account, error: null, code: 200 };
       }
-      return { data: null, error: 'Account not found', code: 404 }
+      return { data: null, error: 'Account not found', code: 404 };
     } catch (error: any) {
       console.log({ error });
-      return { data: null, error, code: 500 }
+      return { data: null, error, code: 500 };
     }
   }
 
@@ -131,7 +133,7 @@ export default class AccountDBService {
           transferId,
           type,
         }
-      })
+      });
       const balance = await this.prisma.account.update({
         where: {
           id: accountId
@@ -141,13 +143,13 @@ export default class AccountDBService {
             increment: +amount
           }
         }
-      })
+      });
       if (creditTxn) {
-        return { data: { txn: creditTxn, balance }, error: null, code: 200 }
+        return { data: { txn: creditTxn, balance }, error: null, code: 200 };
       }
-      return { data: null, error: 'Error crediting account', code: 400 }
+      return { data: null, error: 'Error crediting account', code: 400 };
     } catch (error) {
-      return { data: null, error, code: 500 }
+      return { data: null, error, code: 500 };
     }
   }
 
@@ -161,7 +163,7 @@ export default class AccountDBService {
           transferId,
           type,
         }
-      })
+      });
       const balance = await this.prisma.account.update({
         where: {
           id: accountId
@@ -171,13 +173,13 @@ export default class AccountDBService {
             increment: -amount
           }
         }
-      })
+      });
       if (debitTxn) {
-        return { data: { txn: debitTxn, balance }, error: null, code: 200 }
+        return { data: { txn: debitTxn, balance }, error: null, code: 200 };
       }
-      return { data: null, error: 'Error debiting account', code: 400 }
+      return { data: null, error: 'Error debiting account', code: 400 };
     } catch (error: any) {
-      return { data: null, error, code: 500 }
+      return { data: null, error, code: 500 };
     }
   }
 
@@ -191,13 +193,13 @@ export default class AccountDBService {
           amount,
           status: 'PENDING'
         }
-      })
+      });
       if (newTransfer) {
-        return { data: newTransfer, error: null, code: 200 }
+        return { data: newTransfer, error: null, code: 200 };
       }
-      return { data: null, error: 'Error initiating transfer', code: 400 }
+      return { data: null, error: 'Error initiating transfer', code: 400 };
     } catch (error: any) {
-      return { data: null, error, code: 500 }
+      return { data: null, error, code: 500 };
     }
   }
 
@@ -238,11 +240,11 @@ export default class AccountDBService {
         }
       });
       if (updatedTransfer) {
-        return { data: updatedTransfer, error: null, code: 200 }
+        return { data: updatedTransfer, error: null, code: 200 };
       }
-      return { data: null, error: 'Error updating transfer status', code: 400 }
+      return { data: null, error: 'Error updating transfer status', code: 400 };
     } catch (error: any) {
-      return { data: null, error, code: 500 }
+      return { data: null, error, code: 500 };
     }
   }
 
@@ -262,7 +264,13 @@ export default class AccountDBService {
       const pages = Math.ceil(total / limit) || 1;
       const prev = pages > 1 && page <= pages && page > 0 ? page - 1 : null;
       const next = pages > 1 && page < pages && page > 0 ? page + 1 : null;
-      return { data: { data: transactions, pages, page, prev, next, total }, error: null, code: 200 };
+      return {
+        data: {
+          data: transactions, pages, page, prev, next, total
+        },
+        error: null,
+        code: 200
+      };
     } catch (error: any) {
       console.log({ error });
       return { data: null, error, code: 500 };
@@ -295,7 +303,13 @@ export default class AccountDBService {
       const pages = Math.ceil(total / limit) || 1;
       const prev = pages > 1 && page <= pages && page > 0 ? page - 1 : null;
       const next = pages > 1 && page < pages && page > 0 ? page + 1 : null;
-      return { data: { data: transactions, searchTerm: { startDate, endDate }, pages, page, prev, next, total }, error: null, code: 200 };
+      return {
+        data: {
+          data: transactions, searchTerm: { startDate, endDate }, pages, page, prev, next, total
+        },
+        error: null,
+        code: 200
+      };
     } catch (error: any) {
       console.log({ error });
       return { data: null, error, code: 500 };

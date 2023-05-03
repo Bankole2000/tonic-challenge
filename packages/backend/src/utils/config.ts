@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 
 export const config = {
@@ -19,4 +20,4 @@ export const config = {
   redis: {
     url: process.env.REDIS_URL
   }
-}
+};

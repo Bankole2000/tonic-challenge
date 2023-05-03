@@ -1,4 +1,4 @@
-import { isValidDate } from "./validators";
+import { isValidDate } from './validators';
 
 export const isBoolean = (val: any) => Boolean(val) === val;
 

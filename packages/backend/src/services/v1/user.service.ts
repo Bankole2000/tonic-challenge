@@ -12,14 +12,14 @@ export default class UserDBService {
     try {
       const newUser = await this.prisma.user.create({
         data: userData
-      })
+      });
       if (newUser) {
-        return { data: newUser, error: null, code: 201 }
+        return { data: newUser, error: null, code: 201 };
       }
-      return { data: null, error: 'Error creating user', code: 400 }
+      return { data: null, error: 'Error creating user', code: 400 };
     } catch (error: any) {
       console.log({ error });
-      return { data: null, error, code: 500 }
+      return { data: null, error, code: 500 };
     }
   }
 
@@ -32,14 +32,14 @@ export default class UserDBService {
         data: {
           ...profileData
         }
-      })
+      });
       if (updatedUser) {
-        return { data: updatedUser, error: null, code: 201 }
+        return { data: updatedUser, error: null, code: 201 };
       }
-      return { data: updatedUser, error: 'Error updating user', code: 400 }
+      return { data: updatedUser, error: 'Error updating user', code: 400 };
     } catch (error: any) {
       console.log({ error });
-      return { data: null, error, code: 500 }
+      return { data: null, error, code: 500 };
     }
   }
 
@@ -51,12 +51,12 @@ export default class UserDBService {
         }
       });
       if (user) {
-        return { data: user, error: null, code: 200 }
+        return { data: user, error: null, code: 200 };
       }
-      return { data: null, error: 'User not found', code: 404 }
+      return { data: null, error: 'User not found', code: 404 };
     } catch (error: any) {
       console.log({ error });
-      return { data: null, error, code: 500 }
+      return { data: null, error, code: 500 };
     }
   }
 
@@ -68,12 +68,12 @@ export default class UserDBService {
         }
       });
       if (user) {
-        return { data: user, error: null, code: 200 }
+        return { data: user, error: null, code: 200 };
       }
-      return { data: null, error: 'User not found', code: 404 }
+      return { data: null, error: 'User not found', code: 404 };
     } catch (error: any) {
       console.log({ error });
-      return { data: null, error, code: 500 }
+      return { data: null, error, code: 500 };
     }
   }
 
@@ -92,15 +92,21 @@ export default class UserDBService {
         orderBy: {
           createdAt: 'desc'
         }
-      })).map(u => {
-        const { password: _, ...user } = u
+      })).map((u) => {
+        const { password: _, ...user } = u;
         return user;
-      })
+      });
       const total = await this.prisma.user.count();
       const pages = Math.ceil(total / limit) || 1;
       const prev = pages > 1 && page <= pages && page > 0 ? page - 1 : null;
       const next = pages > 1 && page < pages && page > 0 ? page + 1 : null;
-      return { data: { data: users, pages, page, prev, next, total }, error: null, code: 200 };
+      return {
+        data: {
+          data: users, pages, page, prev, next, total
+        },
+        error: null,
+        code: 200
+      };
     } catch (error: any) {
       console.log({ error });
       return { data: null, error, code: 500 };
@@ -144,10 +150,10 @@ export default class UserDBService {
             }
           }
         }
-      })).map(u => {
-        const { password: _, ...user } = u
+      })).map((u) => {
+        const { password: _, ...user } = u;
         return user;
-      })
+      });
       const total = await this.prisma.user.count({
         where: {
           OR: [
@@ -175,7 +181,13 @@ export default class UserDBService {
       const pages = Math.ceil(total / limit) || 1;
       const prev = pages > 1 && page <= pages && page > 0 ? page - 1 : null;
       const next = pages > 1 && page < pages && page > 0 ? page + 1 : null;
-      return { data: { data: users, pages, page, searchTerm, prev, next, total }, error: null, code: 200 };
+      return {
+        data: {
+          data: users, pages, page, searchTerm, prev, next, total
+        },
+        error: null,
+        code: 200
+      };
     } catch (error: any) {
       console.log({ error });
       return { data: null, error, code: 500 };
@@ -197,14 +209,14 @@ export default class UserDBService {
         }
       });
       if (!user) {
-        return { data: user, error: 'User profile not found', code: 404 }
+        return { data: user, error: 'User profile not found', code: 404 };
       }
       let status: AccountStatus = 'COMPLETE';
       if (!user._count.accounts) {
         status = 'NEEDS_ACCOUNT';
       }
       if (!user.bvn) {
-        status = 'BVN_REQUIRED'
+        status = 'BVN_REQUIRED';
       }
       if (!user.firstname || !user.lastname) {
         status = 'BIO_INCOMPLETE';
@@ -217,13 +229,13 @@ export default class UserDBService {
           data: {
             accountStatus: status
           }
-        })
-        return { data: updatedUserStatus, error: null, code: 201 }
+        });
+        return { data: updatedUserStatus, error: null, code: 201 };
       }
-      return { data: user, error: null, code: 200 }
+      return { data: user, error: null, code: 200 };
     } catch (error: any) {
       console.log({ error });
-      return { data: null, error, code: 500 }
+      return { data: null, error, code: 500 };
     }
   }
 
@@ -244,10 +256,10 @@ export default class UserDBService {
           bank: true,
         }
       });
-      return { data: userAccounts, error: null, code: 200 }
+      return { data: userAccounts, error: null, code: 200 };
     } catch (error: any) {
       console.log({ error });
-      return { data: null, error, code: 500 }
+      return { data: null, error, code: 500 };
     }
   }
 
@@ -298,10 +310,16 @@ export default class UserDBService {
       const pages = Math.ceil(total / limit) || 1;
       const prev = pages > 1 && page <= pages && page > 0 ? page - 1 : null;
       const next = pages > 1 && page < pages && page > 0 ? page + 1 : null;
-      return { data: { data: txns, pages, page, prev, next, total }, error: null, code: 200 };
+      return {
+        data: {
+          data: txns, pages, page, prev, next, total
+        },
+        error: null,
+        code: 200
+      };
     } catch (error: any) {
       console.log({ error });
-      return { data: null, error, code: 500 }
+      return { data: null, error, code: 500 };
     }
   }
 
@@ -357,10 +375,16 @@ export default class UserDBService {
       const pages = Math.ceil(total / limit) || 1;
       const prev = pages > 1 && page <= pages && page > 0 ? page - 1 : null;
       const next = pages > 1 && page < pages && page > 0 ? page + 1 : null;
-      return { data: { data: txns, searchTerm: { startDate, endDate }, pages, page, prev, next, total }, error: null, code: 200 };
+      return {
+        data: {
+          data: txns, searchTerm: { startDate, endDate }, pages, page, prev, next, total
+        },
+        error: null,
+        code: 200
+      };
     } catch (error: any) {
       console.log({ error });
-      return { data: null, error, code: 500 }
+      return { data: null, error, code: 500 };
     }
   }
 }

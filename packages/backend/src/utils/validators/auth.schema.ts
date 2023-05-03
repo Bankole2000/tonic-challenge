@@ -1,5 +1,5 @@
-import { isNotEmpty } from '../../utils/helpers/validators';
 import { boolean, object, string } from 'zod';
+import { isNotEmpty } from '../helpers/validators';
 
 export const emailRequiredSchema = object({
   body: object({
@@ -9,7 +9,7 @@ export const emailRequiredSchema = object({
   })
 });
 
-export const registerFields = ['email', 'password']
+export const registerFields = ['email', 'password'];
 
 export const registerSchema = object({
   body: object({
@@ -19,7 +19,7 @@ export const registerSchema = object({
     password: string({
       required_error: 'Password is required',
     }).min(8, 'Password must be at least 8 characters')
-      .refine(data => isNotEmpty(data), 'Password cannot be empty'),
+      .refine((data) => isNotEmpty(data), 'Password cannot be empty'),
     confirmPassword: string({
       required_error: 'Confirm Password is required',
     }),
@@ -42,6 +42,6 @@ export const loginSchema = object({
     password: string({
       required_error: 'Password is required',
     }).min(1, 'Password is required')
-      .refine(data => isNotEmpty(data), 'Password cannot be empty'),
+      .refine((data) => isNotEmpty(data), 'Password cannot be empty'),
   })
 });

@@ -1,7 +1,9 @@
-import { Request, Response } from "express";
-import { ServiceResponse } from "../../@types/ServiseReponse.type";
-import UserDBService from "../../services/v1/user.service";
-import { generateTokens, hashPassword, passwordsMatch, signJWT } from "../../utils/helpers/jwt-utils";
+import { Request, Response } from 'express';
+import { ServiceResponse } from '../../@types/ServiseReponse.type';
+import UserDBService from '../../services/v1/user.service';
+import {
+  generateTokens, hashPassword, passwordsMatch, signJWT
+} from '../../utils/helpers/jwt-utils';
 
 const userService = new UserDBService();
 
@@ -22,7 +24,7 @@ export const adminGetUsersHandler = async (req: Request, res: Response) => {
   if (searchTerm) {
     const { data, error, code } = await userService.searchUsers(searchTerm as string, page, limit);
     const sr = new ServiceResponse(
-      `User search results`,
+      'User search results',
       data,
       !error,
       code,
@@ -30,12 +32,12 @@ export const adminGetUsersHandler = async (req: Request, res: Response) => {
       error,
       error ? 'Check logs and database' : null,
       res.locals.newAccessToken
-    )
+    );
     return res.status(sr.statusCode).send(sr);
   }
   const { data, error, code } = await userService.getUsers(page, limit);
   const sr = new ServiceResponse(
-    `Users`,
+    'Users',
     data,
     !error,
     code,
@@ -43,6 +45,6 @@ export const adminGetUsersHandler = async (req: Request, res: Response) => {
     error,
     error ? 'Check logs and database' : null,
     res.locals.newAccessToken
-  )
+  );
   return res.status(sr.statusCode).send(sr);
-}
+};

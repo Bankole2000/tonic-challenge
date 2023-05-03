@@ -15,9 +15,9 @@ import { checkUserOwnsAccount } from '../../middleware/v1/account.v1.middleware'
 const userRoutes = Router({ mergeParams: true });
 
 userRoutes.get('/accounts', getUserAccountsHandler); // Get user Accounts
-userRoutes.patch('/kyc', validate(updateProfileSchema, 'Profile Update'), updateProfileHandler)
+userRoutes.patch('/kyc', validate(updateProfileSchema, 'Profile Update'), updateProfileHandler);
 userRoutes.post('/accounts', requireAccountStatus(['COMPLETE', 'NEEDS_ACCOUNT']), validate(createAccountSchema, 'Create Account'), createNewAccountHandler); // Add new user account
 userRoutes.delete('/accounts/:accountId', checkUserOwnsAccount, deleteAccountHandler); // delete User account
 userRoutes.get('/transactions', getUserTransactionsHandler);
 
-export default userRoutes
+export default userRoutes;

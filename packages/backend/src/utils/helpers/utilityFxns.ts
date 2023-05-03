@@ -1,4 +1,4 @@
-import { ServiceResponse } from "../../@types/ServiseReponse.type";
+import { ServiceResponse } from '../../@types/ServiseReponse.type';
 
 export const serverErrorMessage = (error: any, code: number) => new ServiceResponse(
   'An unexpected error occured',

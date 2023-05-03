@@ -1,6 +1,6 @@
-import { ServiceResponse } from "../../@types/ServiseReponse.type";
-import { Request, Response } from "express";
-import SystemDBService from "../../services/v1/system.service";
+import { Request, Response } from 'express';
+import { ServiceResponse } from '../../@types/ServiseReponse.type';
+import SystemDBService from '../../services/v1/system.service';
 
 const systemService = new SystemDBService();
 
@@ -22,7 +22,7 @@ export const getBanksHandler = async (req: Request, res: Response) => {
   if (searchTerm) {
     const { data, error, code } = await systemService.searchBanks(searchTerm as string, page, limit);
     const sr = new ServiceResponse(
-      `Bank search results`,
+      'Bank search results',
       data,
       !error,
       code,
@@ -30,12 +30,12 @@ export const getBanksHandler = async (req: Request, res: Response) => {
       error,
       error ? 'Check logs and database' : null,
       res.locals.newAccessToken
-    )
+    );
     return res.status(sr.statusCode).send(sr);
   }
   const { data, error, code } = await systemService.getBanks(page, limit);
   const sr = new ServiceResponse(
-    `Banks`,
+    'Banks',
     data,
     !error,
     code,
@@ -43,7 +43,7 @@ export const getBanksHandler = async (req: Request, res: Response) => {
     error,
     error ? 'Check logs and database' : null,
     res.locals.newAccessToken
-  )
+  );
   console.log({ originalUrl: req.originalUrl });
   return res.status(sr.statusCode).send(sr);
-}
+};

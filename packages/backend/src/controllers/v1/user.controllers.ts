@@ -1,14 +1,14 @@
-import { Request, Response } from "express";
-import { ServiceResponse } from "../../@types/ServiseReponse.type";
-import { updateProfileFields } from "../../utils/validators/user.schema";
-import UserDBService from "../../services/v1/user.service";
-import SessionDBService from "../../services/v1/session.service";
-import CacheService from "../../services/v1/cache.service";
-import AccountDBService from "../../services/v1/account.service";
-import { serverErrorMessage } from "../../utils/helpers/utilityFxns";
-import { getIO } from "../../lib/socketIO";
-import { socketEventTypes } from "../../utils/validators/socketEvents.schema";
-import { isValidDate } from "../../utils/helpers/validators";
+import { Request, Response } from 'express';
+import { ServiceResponse } from '../../@types/ServiseReponse.type';
+import { updateProfileFields } from '../../utils/validators/user.schema';
+import UserDBService from '../../services/v1/user.service';
+import SessionDBService from '../../services/v1/session.service';
+import CacheService from '../../services/v1/cache.service';
+import AccountDBService from '../../services/v1/account.service';
+import { serverErrorMessage } from '../../utils/helpers/utilityFxns';
+import { getIO } from '../../lib/socketIO';
+import { socketEventTypes } from '../../utils/validators/socketEvents.schema';
+import { isValidDate } from '../../utils/helpers/validators';
 
 const sessionService = new SessionDBService();
 const userService = new UserDBService();
@@ -19,14 +19,14 @@ export const getUserAccountsHandler = async (req: Request, res: Response) => {
   const { data, error, code } = await userService.getUserAccounts(user.id);
   if (error) {
     const sr = new ServiceResponse(
-      `Error getting user accounts`,
+      'Error getting user accounts',
       data,
       false,
       code,
       'FETCH_USER_ACCOUNTS_ERROR',
       error,
       'Please contact support'
-    )
+    );
     return res.status(sr.statusCode).send(sr);
   }
   const sr = new ServiceResponse(
@@ -40,7 +40,7 @@ export const getUserAccountsHandler = async (req: Request, res: Response) => {
     res.locals.newAccessToken
   );
   return res.status(sr.statusCode).send(sr);
-}
+};
 
 export const createNewAccountHandler = async (req: Request, res: Response) => {
   const { user } = res.locals;
@@ -57,13 +57,13 @@ export const createNewAccountHandler = async (req: Request, res: Response) => {
       'BANK_ACCOUNT_NUMBER_ALREADY_ASSIGNED',
       'Please check account details and try again',
       res.locals.newAccessToken
-    )
+    );
     return res.status(sr.statusCode).send(sr);
   }
   const { data: newAccount, error: accountCreateError, code: accountCreateStatusCode } = await accountService.createUserAccount(accountNumber, bankId, user.id);
   if (!newAccount) {
     const sr = new ServiceResponse(
-      `There was an error creating your account`,
+      'There was an error creating your account',
       newAccount,
       false,
       accountCreateStatusCode,
@@ -76,16 +76,16 @@ export const createNewAccountHandler = async (req: Request, res: Response) => {
   }
   const { data: updatedProfileStatus, code: profileStatusCode } = await userService.setUserAccountStatus(user.id);
   if (profileStatusCode === 201 && updatedProfileStatus) {
-    const { data: updatedSession } = await sessionService.getUserSession(res.locals.session.id, user.id)
+    const { data: updatedSession } = await sessionService.getUserSession(res.locals.session.id, user.id);
     if (updatedSession) {
-      const cacheService = new CacheService()
+      const cacheService = new CacheService();
       await cacheService.cacheUserSession(updatedSession.id, updatedSession);
       const { password: _, ...profile } = updatedProfileStatus;
       getIO().to(user.id).emit(socketEventTypes.PROFILE_UPDATED, profile);
     }
   }
   const sr = new ServiceResponse(
-    `Account created successfully`,
+    'Account created successfully',
     newAccount,
     true,
     accountCreateStatusCode,
@@ -93,7 +93,7 @@ export const createNewAccountHandler = async (req: Request, res: Response) => {
     null,
     null,
     res.locals.newAccessToken
-  )
+  );
   return res.status(sr.statusCode).send(sr);
 };
 
@@ -105,7 +105,7 @@ export const deleteAccountHandler = async (req: Request, res: Response) => {
     const sr = code > 499
       ? serverErrorMessage(error, code)
       : new ServiceResponse(
-        `Error deleting account`,
+        'Error deleting account',
         deletedAccount,
         false,
         code,
@@ -113,14 +113,14 @@ export const deleteAccountHandler = async (req: Request, res: Response) => {
         error,
         'Check account Id',
         res.locals.newAccessToken
-      )
+      );
     res.status(sr.statusCode).send(sr);
   }
   const { data: updatedProfileStatus, code: profileStatusCode } = await userService.setUserAccountStatus(user.id);
   if (profileStatusCode === 201 && updatedProfileStatus) {
-    const { data: updatedSession } = await sessionService.getUserSession(res.locals.session.id, user.id)
+    const { data: updatedSession } = await sessionService.getUserSession(res.locals.session.id, user.id);
     if (updatedSession) {
-      const cacheService = new CacheService()
+      const cacheService = new CacheService();
       await cacheService.cacheUserSession(updatedSession.id, updatedSession);
       const { password: _, ...profile } = updatedProfileStatus;
       getIO().to(user.id).emit(socketEventTypes.PROFILE_UPDATED, profile);
@@ -137,31 +137,31 @@ export const deleteAccountHandler = async (req: Request, res: Response) => {
     res.locals.newAccessToken
   );
   return res.status(sr.statusCode).send(sr);
-}
+};
 
 export const addBeneficiaryAccountHandler = async (req: Request, res: Response) => {
   const sr = new ServiceResponse('Not implemented', null, true, 200, null, null, null, null);
   console.log({ locals: res.locals });
   return res.status(sr.statusCode).send(sr);
-}
+};
 
 export const removeBeneficiaryAccountHandler = async (req: Request, res: Response) => {
   const sr = new ServiceResponse('Not implemented', null, true, 200, null, null, null, null);
   console.log({ locals: res.locals });
   return res.status(sr.statusCode).send(sr);
-}
+};
 
 export const updateProfileHandler = async (req: Request, res: Response) => {
   const profileData: { [key: string]: any } = {};
-  updateProfileFields.forEach(field => {
+  updateProfileFields.forEach((field) => {
     if (req.body[field]) {
-      profileData[field] = req.body[field]
+      profileData[field] = req.body[field];
     }
-  })
+  });
   const { data: updatedProfile, error: profileUpdateError, code: profileUpdateStatusCode } = await userService.updateUserProfile(res.locals.user.id, profileData);
   if (!updatedProfile) {
     const sr = new ServiceResponse(
-      `There was an error updating your profile`,
+      'There was an error updating your profile',
       updatedProfile,
       false,
       profileUpdateStatusCode,
@@ -169,13 +169,13 @@ export const updateProfileHandler = async (req: Request, res: Response) => {
       profileUpdateError,
       profileUpdateStatusCode === 500 ? 'Please contact support' : 'Please check inputs and try again',
       res.locals.newAccessToken
-    )
+    );
     return res.status(sr.statusCode).send(sr);
   }
   const { data: updatedProfileStatus, code: profileStatusCode, error: profileStatusError } = await userService.setUserAccountStatus(res.locals.user.id);
   if (!updatedProfileStatus) {
     const sr = new ServiceResponse(
-      `There was an error updating your profile`,
+      'There was an error updating your profile',
       updatedProfileStatus,
       false,
       profileStatusCode,
@@ -183,13 +183,13 @@ export const updateProfileHandler = async (req: Request, res: Response) => {
       profileStatusError,
       profileStatusCode === 500 ? 'Please contact support' : 'Please check inputs and try again',
       res.locals.newAccessToken
-    )
+    );
     return res.status(sr.statusCode).send(sr);
   }
   if (profileStatusCode === 201) {
-    const { data: updatedSession } = await sessionService.getUserSession(res.locals.session.id, res.locals.user.id)
+    const { data: updatedSession } = await sessionService.getUserSession(res.locals.session.id, res.locals.user.id);
     if (updatedSession) {
-      const cacheService = new CacheService()
+      const cacheService = new CacheService();
       await cacheService.cacheUserSession(updatedSession.id, updatedSession);
     }
   }
@@ -205,10 +205,10 @@ export const updateProfileHandler = async (req: Request, res: Response) => {
     res.locals.newAccessToken
   );
   return res.status(sr.statusCode).send(sr);
-}
+};
 
 export const getUserTransactionsHandler = async (req: Request, res: Response) => {
-  const { user } = res.locals
+  const { user } = res.locals;
   let limit: number;
   let page: number;
   if (parseInt(req.query.limit as string, 10)) {
@@ -239,7 +239,7 @@ export const getUserTransactionsHandler = async (req: Request, res: Response) =>
     const sr = code > 299
       ? serverErrorMessage(error, code)
       : new ServiceResponse(
-        `Transaction search results`,
+        'Transaction search results',
         searchResults,
         true,
         code,
@@ -247,14 +247,14 @@ export const getUserTransactionsHandler = async (req: Request, res: Response) =>
         null,
         null,
         res.locals.newAccessToken
-      )
+      );
     return res.status(sr.statusCode).send(sr);
   }
   const { data: results, error, code } = await userService.getUserTransactions(user.id, page, limit);
   const sr = code > 299
     ? serverErrorMessage(error, code)
     : new ServiceResponse(
-      `Transactions results`,
+      'Transactions results',
       results,
       true,
       code,
@@ -262,6 +262,6 @@ export const getUserTransactionsHandler = async (req: Request, res: Response) =>
       null,
       null,
       res.locals.newAccessToken
-    )
+    );
   return res.status(sr.statusCode).send(sr);
-}
+};

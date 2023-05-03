@@ -20,13 +20,13 @@
       "prettier"
   ],
   "rules": {
-    "linebreak-style": "off",
+    "linebreak-style": "off", 
     "max-len": "warn",
     "prettier/prettier": ["error"],
     "vue/multi-word-component-names": "off",
     "import/prefer-default-export": "off",
     "comma-dangle": "off",
-    "no-underscore-dangle": ["error", { "allow": ["foo_", "_bar"], "allowAfterThis": true, "allowAfterSuper": true }],
+    "no-underscore-dangle": ["error", { "allow": ["foo_", "_bar", "_count"], "allowAfterThis": true, "allowAfterSuper": true }],
     "import/extensions": [
       "off",
       "ignorePackages",

@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
+import { AccountStatus, UserRoles } from '@prisma/client';
 import { ServiceResponse } from '../../@types/ServiseReponse.type';
 import { generateTokens, verifyToken } from '../../utils/helpers/jwt-utils';
 import { config } from '../../utils/config';
-import UserDBService from "../../services/v1/user.service";
-import CacheService from "../../services/v1/cache.service";
-import SessionDBService from "../../services/v1/session.service";
-import { AccountStatus, UserRoles } from '@prisma/client';
+import UserDBService from '../../services/v1/user.service';
+import CacheService from '../../services/v1/cache.service';
+import SessionDBService from '../../services/v1/session.service';
 
 const userService = new UserDBService();
 const sessionService = new SessionDBService();
@@ -34,7 +34,8 @@ export const requireLoggedInUser = async (req: Request, res: Response, next: Nex
       401,
       'Unauthenticated',
       'USER_NOT_AUTHENTICATED',
-      'You need to be Logged in to perform this action');
+      'You need to be Logged in to perform this action'
+    );
     return res.status(sr.statusCode).send(sr);
   }
   return next();
@@ -51,14 +52,13 @@ export const requireAccountStatus = (requiredStatus: AccountStatus[]) => async (
     return res.status(sr.statusCode).send(sr);
   }
   return next();
-}
+};
 
 export const getUserIfLoggedIn = async (req: Request, res: Response, next: NextFunction) => {
   const token = req.headers.authorization;
   console.log({ headers: req.headers });
 
   if (!token) {
-
     const refreshToken = req.cookies?.refreshToken ? req.cookies.refreshToken : req.headers['x-refresh-token'];
 
     if (!refreshToken) {
@@ -80,7 +80,7 @@ export const getUserIfLoggedIn = async (req: Request, res: Response, next: NextF
       return next();
     }
 
-    const { data: cachedSession } = await cacheService.getUserSession(refreshDecoded.sessionId)
+    const { data: cachedSession } = await cacheService.getUserSession(refreshDecoded.sessionId);
 
     if (!cachedSession) {
       res.locals.user = null;
@@ -96,11 +96,11 @@ export const getUserIfLoggedIn = async (req: Request, res: Response, next: NextF
       res.locals.user = null;
       return next();
     }
-    res.cookie('accessToken', refreshedTokens.accessToken)
+    res.cookie('accessToken', refreshedTokens.accessToken);
     // NOTE: We can keep the user logged in by updating the refresh token and cached session
     res.cookie('refreshToken', refreshedTokens.refreshToken);
-    res.locals.newAccessToken = refreshedTokens.accessToken
-    return next()
+    res.locals.newAccessToken = refreshedTokens.accessToken;
+    return next();
   }
 
   const accessToken = token.split(' ')[1];
@@ -116,7 +116,6 @@ export const getUserIfLoggedIn = async (req: Request, res: Response, next: NextF
   console.log({ error, expired, valid });
 
   if (decoded && valid) {
-
     const { data: existingUser } = await userService.findUserById(decoded.userId);
 
     if (!existingUser) {
@@ -161,7 +160,7 @@ export const getUserIfLoggedIn = async (req: Request, res: Response, next: NextF
       return next();
     }
 
-    const { data: existingSession } = await cacheService.getUserSession(refreshDecoded.sessionId)
+    const { data: existingSession } = await cacheService.getUserSession(refreshDecoded.sessionId);
 
     if (!existingSession) {
       res.locals.user = null;
@@ -181,7 +180,7 @@ export const getUserIfLoggedIn = async (req: Request, res: Response, next: NextF
       return next();
     }
 
-    res.locals.newAccessToken = refreshedTokens.accessToken
+    res.locals.newAccessToken = refreshedTokens.accessToken;
     res.locals.user = existingUser;
     res.locals.session = existingSession;
     return next();

@@ -1,11 +1,11 @@
-import { Request, Response } from "express";
-import { isValidDate } from "../../utils/helpers/validators";
-import { ServiceResponse } from "../../@types/ServiseReponse.type";
-import AccountDBService from "../../services/v1/account.service";
-import { getIO } from "../../lib/socketIO";
-import { socketEventTypes } from "../../utils/validators/socketEvents.schema";
-import CacheService from "../../services/v1/cache.service";
-import { serverErrorMessage } from "../../utils/helpers/utilityFxns";
+import { Request, Response } from 'express';
+import { isValidDate } from '../../utils/helpers/validators';
+import { ServiceResponse } from '../../@types/ServiseReponse.type';
+import AccountDBService from '../../services/v1/account.service';
+import { getIO } from '../../lib/socketIO';
+import { socketEventTypes } from '../../utils/validators/socketEvents.schema';
+import CacheService from '../../services/v1/cache.service';
+import { serverErrorMessage } from '../../utils/helpers/utilityFxns';
 
 const accountService = new AccountDBService();
 
@@ -14,19 +14,19 @@ export const getAccountDetailsHandler = async (req: Request, res: Response) => {
   const { code, data, error } = await accountService.getAccountDetails(accountId);
   if (!data) {
     const sr = new ServiceResponse(
-      `Error getting Account details`,
+      'Error getting Account details',
       null,
       false,
       code,
       code === 404 ? 'Account not found' : 'Error getting account details',
       error,
-      `Ensure that this account exists`,
+      'Ensure that this account exists',
       res.locals.newAccessToken
-    )
+    );
     res.status(sr.statusCode).send(sr);
   }
   const sr = new ServiceResponse(
-    `Account details`,
+    'Account details',
     data,
     true,
     code,
@@ -34,18 +34,18 @@ export const getAccountDetailsHandler = async (req: Request, res: Response) => {
     null,
     null,
     res.locals.newAccessToken
-  )
+  );
   res.status(sr.statusCode).send(sr);
-}
+};
 
 export const findUserAccountHandler = async (req: Request, res: Response) => {
-  const { bankId, accountNumber } = req.body
+  const { bankId, accountNumber } = req.body;
   const { data: foundAccount, error, code } = await accountService.findBankAccount(bankId, accountNumber);
   if (!foundAccount) {
     const sr = code > 499
       ? serverErrorMessage(error, code)
       : new ServiceResponse(
-        `Account not found`,
+        'Account not found',
         foundAccount,
         false,
         code,
@@ -53,11 +53,11 @@ export const findUserAccountHandler = async (req: Request, res: Response) => {
         error,
         'Check account details and try again',
         res.locals.newAccessToken
-      )
+      );
     return res.status(sr.statusCode).send(sr);
   }
   const sr = new ServiceResponse(
-    `Account found`,
+    'Account found',
     foundAccount,
     true,
     200,
@@ -65,9 +65,9 @@ export const findUserAccountHandler = async (req: Request, res: Response) => {
     null,
     null,
     res.locals.newAccessToken
-  )
-  res.status(sr.statusCode).send(sr);
-}
+  );
+  return res.status(sr.statusCode).send(sr);
+};
 
 export const getAccountTransactionsHandler = async (req: Request, res: Response) => {
   const { accountId } = req.params;
@@ -99,7 +99,7 @@ export const getAccountTransactionsHandler = async (req: Request, res: Response)
   if (fromDate) {
     const { code, data, error } = await accountService.searchAccountTransactions(accountId, fromDate, toDate, page, limit);
     const sr = new ServiceResponse(
-      `Transaction Search Results`,
+      'Transaction Search Results',
       data,
       !error,
       code,
@@ -107,12 +107,12 @@ export const getAccountTransactionsHandler = async (req: Request, res: Response)
       error,
       error ? 'Check logs and database' : null,
       res.locals.newAccessToken
-    )
+    );
     return res.status(sr.statusCode).send(sr);
   }
   const { code, data, error } = await accountService.getAccountTransactions(accountId, page, limit);
   const sr = new ServiceResponse(
-    `Transaction Results`,
+    'Transaction Results',
     data,
     !error,
     code,
@@ -120,19 +120,19 @@ export const getAccountTransactionsHandler = async (req: Request, res: Response)
     error,
     error ? 'Check logs and database' : null,
     res.locals.newAccessToken
-  )
+  );
   return res.status(sr.statusCode).send(sr);
-}
+};
 
 export const accountDepositHandler = async (req: Request, res: Response) => {
   const { accountId } = req.params;
   const { amount, description } = req.body;
   const cacheService = new CacheService();
   await cacheService.cacheTransferTxn(accountId, null, amount);
-  const { data, error, code } = await accountService.creditAccount(accountId, amount, description)
+  const { data, error, code } = await accountService.creditAccount(accountId, amount, description);
   if (error) {
     const sr = new ServiceResponse(
-      `Error processing deposit transaction`,
+      'Error processing deposit transaction',
       null,
       false,
       code,
@@ -144,7 +144,7 @@ export const accountDepositHandler = async (req: Request, res: Response) => {
     return res.status(sr.statusCode).send(sr);
   }
   const sr = new ServiceResponse(
-    `Deposit Transaction successful`,
+    'Deposit Transaction successful',
     data,
     true,
     code,
@@ -154,17 +154,17 @@ export const accountDepositHandler = async (req: Request, res: Response) => {
     res.locals.newAccessToken
   );
   return res.status(sr.statusCode).send(sr);
-}
+};
 
 export const accountWithdrawalHandler = async (req: Request, res: Response) => {
   const { accountId } = req.params;
   const { amount, description } = req.body;
   const cacheService = new CacheService();
   await cacheService.cacheTransferTxn(accountId, null, amount);
-  const { data, error, code } = await accountService.debitAccount(accountId, amount, description)
+  const { data, error, code } = await accountService.debitAccount(accountId, amount, description);
   if (error) {
     const sr = new ServiceResponse(
-      `Error processing debit transaction`,
+      'Error processing debit transaction',
       null,
       false,
       code,
@@ -176,7 +176,7 @@ export const accountWithdrawalHandler = async (req: Request, res: Response) => {
     return res.status(sr.statusCode).send(sr);
   }
   const sr = new ServiceResponse(
-    `Withdrawal Transaction successful`,
+    'Withdrawal Transaction successful',
     data,
     true,
     code,
@@ -186,14 +186,14 @@ export const accountWithdrawalHandler = async (req: Request, res: Response) => {
     res.locals.newAccessToken
   );
   return res.status(sr.statusCode).send(sr);
-}
+};
 
 export const transferHandler = async (req: Request, res: Response) => {
   const { accountId: originAccountId } = req.params;
   const { amount, description, destinationAccountId } = req.body;
   if (originAccountId === destinationAccountId) {
     const sr = new ServiceResponse(
-      `Cannot transfer to the same account`,
+      'Cannot transfer to the same account',
       null,
       false,
       422,
@@ -204,11 +204,17 @@ export const transferHandler = async (req: Request, res: Response) => {
     );
     return res.status(sr.statusCode).send(sr);
   }
-  const { data: destinationAccount, code, error: destinationAccountError } = await accountService.getAccountDetails(destinationAccountId);
+
+  const {
+    data: destinationAccount,
+    code,
+    error: destinationAccountError
+  } = await accountService.getAccountDetails(destinationAccountId);
+
   if (!destinationAccount) {
     console.log({ destinationAccountError });
     const sr = new ServiceResponse(
-      `Receiving account does not exist`,
+      'Receiving account does not exist',
       destinationAccount,
       false,
       code,
@@ -222,10 +228,15 @@ export const transferHandler = async (req: Request, res: Response) => {
   const cacheService = new CacheService();
   await cacheService.cacheTransferTxn(originAccountId, destinationAccountId, amount);
 
-  const { data: newTransfer, code: initiateTransferStatusCode, error: initiateTransferError } = await accountService.initiateTransfer(originAccountId, destinationAccountId, amount, description);
+  const {
+    data: newTransfer,
+    code: initiateTransferStatusCode,
+    error: initiateTransferError
+  } = await accountService
+    .initiateTransfer(originAccountId, destinationAccountId, amount, description);
   if (!newTransfer) {
     const sr = new ServiceResponse(
-      `Error initiating transfer`,
+      'Error initiating transfer',
       newTransfer,
       false,
       initiateTransferStatusCode,
@@ -233,17 +244,17 @@ export const transferHandler = async (req: Request, res: Response) => {
       initiateTransferError,
       'Please confirm account details and amount, and try again',
       res.locals.newAccessToken
-    )
+    );
     return res.status(sr.statusCode).send(sr);
   }
 
   // Debit Benefactor
-  const { data: senderDebitTxn, error: debitError, code: debitStatusCode } = await accountService.debitAccount(originAccountId, amount, description, "DEBIT", newTransfer.id);
+  const { data: senderDebitTxn, error: debitError, code: debitStatusCode } = await accountService.debitAccount(originAccountId, amount, description, 'DEBIT', newTransfer.id);
 
   if (!senderDebitTxn) {
     await accountService.updateTransferStatus(newTransfer.id, 'FAILED');
     const sr = new ServiceResponse(
-      `Transaction Failed`,
+      'Transaction Failed',
       debitStatusCode,
       false,
       debitStatusCode,
@@ -251,7 +262,7 @@ export const transferHandler = async (req: Request, res: Response) => {
       debitError,
       'Please check transfer inputs',
       res.locals.newAccessToken
-    )
+    );
     return res.status(sr.statusCode).send(sr);
   }
 
@@ -259,10 +270,10 @@ export const transferHandler = async (req: Request, res: Response) => {
   const { data: recieverCreditTxn, error: creditError, code: creditStatusCode } = await accountService.creditAccount(destinationAccountId, amount, description, 'CREDIT', newTransfer.id);
   if (!recieverCreditTxn) {
     // Reverse Transaction if credit failed
-    await accountService.creditAccount(originAccountId, amount, `REVERSAL${description ? ' - ' : ''}${description}`, 'CREDIT', newTransfer.id)
+    await accountService.creditAccount(originAccountId, amount, `REVERSAL${description ? ' - ' : ''}${description}`, 'CREDIT', newTransfer.id);
     await accountService.updateTransferStatus(newTransfer.id, 'REVERSED');
     const sr = new ServiceResponse(
-      `Transaction Failed`,
+      'Transaction Failed',
       null,
       false,
       creditStatusCode,
@@ -270,7 +281,7 @@ export const transferHandler = async (req: Request, res: Response) => {
       creditError,
       'Please check transfer inputs',
       res.locals.newAccessToken
-    )
+    );
     return res.status(sr.statusCode).send(sr);
   }
 
@@ -278,12 +289,16 @@ export const transferHandler = async (req: Request, res: Response) => {
   const { data: completedTransfer, code: transferStatusCode, error: transferError } = await accountService.updateTransferStatus(newTransfer.id, 'SUCCESSFUL');
   if (completedTransfer) {
     // Update Clients in realtime
-    getIO().to(completedTransfer.originAccount.user.id).emit(socketEventTypes.ACCOUNT_DEBITED, senderDebitTxn);
-    getIO().to(completedTransfer.destinationAccount.user.id).emit(socketEventTypes.ACCOUNT_CREDITED, recieverCreditTxn)
+    getIO()
+      .to(completedTransfer.originAccount.user.id)
+      .emit(socketEventTypes.ACCOUNT_DEBITED, senderDebitTxn);
+    getIO()
+      .to(completedTransfer.destinationAccount.user.id)
+      .emit(socketEventTypes.ACCOUNT_CREDITED, recieverCreditTxn);
   }
 
   const sr = new ServiceResponse(
-    `Transfer Completed`,
+    'Transfer Completed',
     completedTransfer,
     !transferError,
     transferStatusCode,
@@ -291,6 +306,6 @@ export const transferHandler = async (req: Request, res: Response) => {
     transferError,
     transferError ? 'Check logs and database' : null,
     res.locals.newAccessToken
-  )
+  );
   return res.status(sr.statusCode).send(sr);
-}
+};

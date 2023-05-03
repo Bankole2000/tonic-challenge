@@ -3,10 +3,10 @@ import { config } from '../../utils/config';
 import { connectRedis, RedisConnection } from '../../lib/redis';
 
 export default class CacheService {
-  redis: RedisConnection
+  redis: RedisConnection;
 
   constructor() {
-    this.redis = connectRedis()
+    this.redis = connectRedis();
   }
 
   async cacheUserSession(sessionId: string, sessionData: Session) {
@@ -15,7 +15,7 @@ export default class CacheService {
       console.log({ sessionExpiration });
       const sessionKey = `${config.self.name}:session:${sessionId}`;
       await this.redis.connect();
-      await this.redis.setEx(sessionKey, sessionExpiration, JSON.stringify(sessionData))
+      await this.redis.setEx(sessionKey, sessionExpiration, JSON.stringify(sessionData));
       await this.redis.disconnect();
     } catch (error: any) {
       console.log({ error });
@@ -27,7 +27,7 @@ export default class CacheService {
       const cacheExpiration = parseInt(config.self.accessTokenTTLMS as string, 10) / 1000;
       const reqKey = `${config.self.name}:cache:${reqUrl}`;
       await this.redis.connect();
-      await this.redis.setEx(reqKey, cacheExpiration, JSON.stringify(data))
+      await this.redis.setEx(reqKey, cacheExpiration, JSON.stringify(data));
       await this.redis.disconnect();
     } catch (error: any) {
       console.log({ error });
@@ -69,7 +69,7 @@ export default class CacheService {
     try {
       const reqKey = `${config.self.name}:cache:${reqUrl}`;
       await this.redis.connect();
-      const data = await this.redis.get(reqKey)
+      const data = await this.redis.get(reqKey);
       await this.redis.disconnect();
       if (data) {
         return { data: JSON.parse(data), error: null, code: 200 };
@@ -77,7 +77,7 @@ export default class CacheService {
       return { data: null, error: 'Request not found', code: 404 };
     } catch (error: any) {
       console.log({ error });
-      return { data: null, error, code: 500 }
+      return { data: null, error, code: 500 };
     }
   }
 
@@ -93,7 +93,7 @@ export default class CacheService {
       return { data: null, error: 'Session not found', code: 404 };
     } catch (error: any) {
       console.log({ error });
-      return { data: null, error, code: 500 }
+      return { data: null, error, code: 500 };
     }
   }
 
@@ -103,15 +103,16 @@ export default class CacheService {
       await this.redis.connect();
       const session = await this.redis.del(sessionKey);
       await this.redis.disconnect();
+      return { data: session, error: null, code: 201 };
     } catch (error: any) {
       console.log({ error });
-      return { data: null, error, code: 500 }
+      return { data: null, error, code: 500 };
     }
   }
 
   async clearAllUserSessions(sessionIds: string[]) {
     try {
-      const sessionKeys = sessionIds.map(id => `${config.self.name}:session:${id}`)
+      const sessionKeys = sessionIds.map((id) => `${config.self.name}:session:${id}`);
       await this.redis.connect();
       await this.redis.del(sessionKeys);
       await this.redis.disconnect();

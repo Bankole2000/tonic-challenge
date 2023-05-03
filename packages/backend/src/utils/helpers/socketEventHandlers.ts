@@ -1,5 +1,5 @@
-import { SocketConnection } from "../../lib/socketIO";
-import UserDBService from "../../services/v1/user.service";
+import { SocketConnection } from '../../lib/socketIO';
+import UserDBService from '../../services/v1/user.service';
 
 const userService = new UserDBService();
 

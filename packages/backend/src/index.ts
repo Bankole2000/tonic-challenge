@@ -11,7 +11,7 @@ const PORT = self.port;
 
 const httpServer = http.createServer(app);
 
-const io = setIO(httpServer, `/socket`);
+const io = setIO(httpServer, '/socket');
 
 io.on('connection', (socket) => {
   logger.info('Socket connected');
@@ -21,8 +21,8 @@ io.on('connection', (socket) => {
   socket.on(socketEventTypes.USER_CONNECTED, async (data, ack) => {
     const result = await socketEventHandlers[socketEventTypes.USER_CONNECTED](data, socket, io);
     ack(result);
-  })
-})
+  });
+});
 
 httpServer.listen(PORT, async () => {
   await seedBankData();

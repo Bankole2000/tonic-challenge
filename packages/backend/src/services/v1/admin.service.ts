@@ -1,7 +1,7 @@
-import { AccountStatus, Prisma, PrismaClient, UserRoles } from '@prisma/client';
+import { PrismaClient, UserRoles } from '@prisma/client';
 import prisma from '../../lib/prisma';
 
-export default class UserDBService {
+export default class AdminDBService {
   prisma: PrismaClient;
 
   constructor() {
@@ -21,12 +21,12 @@ export default class UserDBService {
         }
       });
       if (updatedUser) {
-        return { data: updatedUser, error: null, code: 201 }
+        return { data: updatedUser, error: null, code: 201 };
       }
-      return { data: updatedUser, error: 'Error updating user roles', code: 400 }
+      return { data: updatedUser, error: 'Error updating user roles', code: 400 };
     } catch (error: any) {
       console.log({ error });
-      return { data: null, error, code: 500 }
+      return { data: null, error, code: 500 };
     }
   }
 }

@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "build": "tsc --build --clean",
+    "start": "node dist/index.js"
   },
   "author": "Bankole Esan",
   "license": "MIT",

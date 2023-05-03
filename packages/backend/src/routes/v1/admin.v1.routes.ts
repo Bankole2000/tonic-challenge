@@ -1,8 +1,12 @@
-import { defaultHandler } from '../../controllers/default.controllers';
 import { Router } from 'express';
+import { defaultHandler } from '../../controllers/default.controllers';
 import { adminGetUsersHandler } from '../../controllers/v1/admin.controllers';
-import { adminAddUserHandler, adminDeleteUserHandler, adminGetUserAccountsHandler, adminGetUserTransactionsHandler, adminUpdateUserHandler } from '../../controllers/v1/admin/users.controllers';
-import { adminCreateAccountForUserHandler, adminDeleteUserAccountHandler, adminDepositIntoAccountHandler, adminFindAccountHandler, adminGetAccountsHandler, adminGetAccountTransactionsHandler, adminGetTransactionsHandler, adminReverseTransaction, adminReverseTransferHandler, adminTransferBetweenAccountsHandler, adminWithdrawFromAccountHandler } from '../../controllers/v1/admin/accounts.controllers';
+import {
+  adminAddUserHandler, adminDeleteUserHandler, adminGetUserAccountsHandler, adminGetUserTransactionsHandler, adminUpdateUserHandler
+} from '../../controllers/v1/admin/users.controllers';
+import {
+  adminCreateAccountForUserHandler, adminDeleteUserAccountHandler, adminDepositIntoAccountHandler, adminFindAccountHandler, adminGetAccountsHandler, adminGetAccountTransactionsHandler, adminGetTransactionsHandler, adminReverseTransaction, adminReverseTransferHandler, adminTransferBetweenAccountsHandler, adminWithdrawFromAccountHandler
+} from '../../controllers/v1/admin/accounts.controllers';
 import { checkAccountExists, checkUserExists } from '../../middleware/v1/admin.v1.middleware';
 
 const adminRoutes = Router();
@@ -33,4 +37,4 @@ adminRoutes.delete('/accounts/transfer/:transferId', adminReverseTransferHandler
 adminRoutes.get('/transactions', adminGetTransactionsHandler);
 adminRoutes.delete('/transactions/:transactionId', adminReverseTransaction);
 
-export default adminRoutes
+export default adminRoutes;

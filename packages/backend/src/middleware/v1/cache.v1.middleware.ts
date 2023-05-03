@@ -12,16 +12,16 @@ export const getFromCache = async (req: Request, res: Response, next: NextFuncti
   }
   console.log({ error });
   return next();
-}
+};
 
 export const preventDuplicateTxn = async (req: Request, res: Response, next: NextFunction) => {
-  const { accountId: originAccountId } = req.params
+  const { accountId: originAccountId } = req.params;
   const { destinationAccountId, amount } = req.body;
   const { data, error } = await cacheService.getCachedTransferTxn(originAccountId, destinationAccountId ?? null, amount);
   if (data) {
     console.log({ error });
     const sr = new ServiceResponse(
-      `Duplicate Transaction detected - Please try again after some time`,
+      'Duplicate Transaction detected - Please try again after some time',
       null,
       false,
       429,
@@ -33,4 +33,4 @@ export const preventDuplicateTxn = async (req: Request, res: Response, next: Nex
     return res.status(sr.statusCode).send(sr);
   }
   return next();
-}
+};
