@@ -1,0 +1,117 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String               @id @default(auto()) @map("_id") @db.ObjectId
+  email         String               @unique
+  password      String
+  accountStatus AccountStatus        @default(NEW)
+  firstname     String?
+  lastname      String?
+  tos           Boolean              @default(false)
+  bvn           String?
+  roles         UserRoles[]          @default([USER])
+  accounts      Account[]
+  sessions      Session[]
+  beneficiaries UserHasBeneficiary[] @relation("Benefactor")
+  createdAt     DateTime             @default(now())
+}
+
+model Session {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String    @db.ObjectId
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  isValid     Boolean   @default(true)
+  loggedInAt  DateTime  @default(now())
+  loggedOutAt DateTime?
+}
+
+model UserHasBeneficiary {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String  @db.ObjectId
+  user      User    @relation("Benefactor", fields: [userId], references: [id], onDelete: Cascade)
+  accountId String  @db.ObjectId
+  account   Account @relation("BeneficiaryAccount", fields: [accountId], references: [id], onDelete: Cascade)
+}
+
+model Account {
+  id                String               @id @default(auto()) @map("_id") @db.ObjectId
+  accountNumber     String
+  bankId            String               @db.ObjectId
+  bank              Bank                 @relation(fields: [bankId], references: [id], onDelete: Cascade)
+  userId            String               @db.ObjectId
+  balance           Int                  @default(0)
+  user              User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions      Transaction[]
+  receivedTransfers Transfer[]           @relation("ReceivedTransfers")
+  sentTransfers     Transfer[]           @relation("sentTransfers")
+  isBeneficiaryTo   UserHasBeneficiary[] @relation("BeneficiaryAccount")
+  createdAt         DateTime             @default(now())
+}
+
+model Bank {
+  id       String    @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  code     String?
+  accounts Account[]
+}
+
+model Transaction {
+  id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  accountId   String          @db.ObjectId
+  account     Account         @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  description String?
+  amount      Int
+  transferId  String?         @db.ObjectId
+  transfer    Transfer?       @relation("TransferTransactions", fields: [transferId], references: [id], onDelete: Cascade)
+  type        TransactionType
+  createdAt   DateTime        @default(now())
+}
+
+model Transfer {
+  id                   String         @id @default(auto()) @map("_id") @db.ObjectId
+  originAccountId      String         @db.ObjectId
+  originAccount        Account        @relation("sentTransfers", fields: [originAccountId], references: [id], onDelete: Cascade)
+  destinationAccountId String         @db.ObjectId
+  destinationAccount   Account        @relation("ReceivedTransfers", fields: [destinationAccountId], references: [id], onDelete: Cascade)
+  amount               Int
+  description          String?
+  transactions         Transaction[]  @relation("TransferTransactions")
+  status               TransferStatus
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+}
+
+enum TransactionType {
+  DEBIT
+  CREDIT
+}
+
+enum TransferStatus {
+  PENDING
+  SUCCESSFUL
+  REVERSED
+  FAILED
+}
+
+enum AccountStatus {
+  NEW
+  BIO_INCOMPLETE
+  BVN_REQUIRED
+  NEEDS_ACCOUNT
+  COMPLETE
+}
+
+enum UserRoles {
+  USER
+  ADMIN
+}

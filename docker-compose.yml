@@ -1,0 +1,35 @@
+version: '3'
+services:
+  frontend: 
+    container_name: tonic-frontend
+    restart: always
+    build: 
+      context: ./packages/frontend
+      dockerfile: dockerfile
+    ports:
+      - '80:8080'
+    external_links:
+      - mongo
+      - redis
+  backend:
+    container_name: tonic-backend
+    restart: always
+    build: 
+      context: ./packages/frontend
+      dockerfile: dockerfile
+    ports:
+      - '80:3000'
+      - '3000:3000'
+    external_links:
+      - mongo
+      - redis
+  mongo:
+    container_name: mongo
+    image: bitnami/mongodb
+    ports:
+      - '27017:27017'
+  redis: 
+    container_name: redis
+    image: redis
+    ports: 
+      - '6379:6379'

@@ -1,0 +1,41 @@
+{
+  "env": {
+      "es2021": true,
+      "node": true
+  },
+  "extends": [
+      "airbnb-base",
+      "plugin:@typescript-eslint/recommended",
+      "plugin:import/errors",
+      "plugin:import/warnings",
+      "plugin:import/typescript"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+      "ecmaVersion": "latest",
+      "sourceType": "module"
+  },
+  "plugins": [
+      "@typescript-eslint",
+      "prettier"
+  ],
+  "rules": {
+    "linebreak-style": "off",
+    "max-len": "warn",
+    "prettier/prettier": ["error"],
+    "vue/multi-word-component-names": "off",
+    "import/prefer-default-export": "off",
+    "comma-dangle": "off",
+    "no-underscore-dangle": ["error", { "allow": ["foo_", "_bar"], "allowAfterThis": true, "allowAfterSuper": true }],
+    "import/extensions": [
+      "off",
+      "ignorePackages",
+      {
+        ".js": "never",
+        ".jsx": "never",
+        ".ts": "never",
+        ".tsx": "never"
+      }
+    ]
+  }
+}
