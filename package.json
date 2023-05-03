@@ -8,7 +8,7 @@
     "url": "https://github.com/Bankole2000/tonic-challenge.git",
     "type": "git"
   },
-  "version": "1.1.1",
+  "version": "1.1.2",
   "scripts": {
     "lint": "eslint \"packages/backend/**/*.ts\"",
     "lint:fix": "eslint --fix \"packages/backend/**/*.ts\"",
