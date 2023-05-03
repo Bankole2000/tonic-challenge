@@ -4,25 +4,48 @@
   "workspaces": [
     "packages/*"
   ],
+  "repository": {
+    "url": "https://github.com/Bankole2000/tonic-challenge.git",
+    "type": "git"
+  },
   "scripts": {
     "lint": "eslint \"packages/backend/**/*.ts\"",
     "lint:fix": "eslint --fix \"packages/backend/**/*.ts\"",
     "release": "standard-version",
     "release:minor": "standard-version --release-as minor",
     "release:patch": "standard-version --release-as patch",
-    "release:major": "standard-version --release-as major"
+    "release:major": "standard-version --release-as major",
+    "prepare": "husky install"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.6.1",
     "@commitlint/config-conventional": "^17.6.1",
     "@typescript-eslint/eslint-plugin": "^5.43.0",
-    "@typescript-eslint/parser": "^5.43.0",
-    "eslint": "^8.27.0",
+    "@typescript-eslint/parser": "^5.59.2",
+    "eslint": "^8.39.0",
+    "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.2.1",
-    "husky": "^8.0.3",
+    "husky": "^8.0.0",
     "lerna": "^6.6.1",
     "standard-version": "^9.5.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "**/*.ts": [
+      "eslint --fix",
+      "git add"
+    ]
+  },
+  "keywords": [],
+  "author": {
+    "name": "Bankole Esan",
+    "email": "techybanky@gmail.com",
+    "url": "https://bankole2000.github.io/webpieces"
   }
 }
