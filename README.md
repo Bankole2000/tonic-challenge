@@ -4,7 +4,7 @@ Repository for [The Tonic Technologies](https://thetonictech.com/) Technical ass
 
 ## Requirements
 
-Assessment Details are specified in [this google Doc](https://docs.google.com/document/d/185nYIkYZ3lNUo-gbODdEmiCyh_Mb642bBoYQKqR7ep8/edit) but (for convenience) are summarized below 
+Assessment Details are specified in [this google Doc](https://docs.google.com/document/d/185nYIkYZ3lNUo-gbODdEmiCyh_Mb642bBoYQKqR7ep8/edit) but (for convenience) are summarized below
 
 - __Test 1__:
   - Write a simple FizzBuzz function, which should output a sequence of integers from 1 to 100 that returns “Fizz” for multiples of 3,  “Buzz” for multiples of 5, and “FizzBuzz” for multiples of both 3 and 5. This should result in something like 1, 2, Fizz, 4, Buzz, Fizz, 7, 8, Fizz, Buzz, 11, Fizz, 13, 14, FizzBuzz
@@ -108,7 +108,7 @@ Steps:
 - Run `npm install` in the root folder
 - Run `npm install` in the `/packages/frontend` folder
 - Run `npm install` in the `/packages/backend` folder
-- Create a `.env` file the `/packages/backend/` folder (i.e. `/packages/backend/.env`) 
+- Create a `.env` file the `/packages/backend/` folder (i.e. `/packages/backend/.env`)
 - Add environment variables to the `.env` following the example in [`/packages/backend/.env.example`](./packages/backend/.env.example)
 - run `npx prisma generate` in the `/packages/backend` folder to initialize the prisma client
   
@@ -132,7 +132,6 @@ Steps:
 - Run `lerna exec --parallel npm run dev` to run both the frontend and backend servers concurrently
 - visit `http://localhost:3000/health-check` to confirm the backend-api is running
 - visit `http://localhost:8080` to confirm the frontend client is running
-
 
 ## Implementation details
 
@@ -168,8 +167,7 @@ type ServiceResponse {
   // part of the refresh token mechanism - if accessToken is renewed, interceptor can replace token without needing to re-authenticate
   newAccessToken: string | undefined | null, 
 }
-// side-note: newAccessToken is exposed here only for demonstration purposes
-// ideally it would just replace the cookie
+// newAccessToken is exposed here only for demonstration purposes
 ```
 
 Local or Docker `<BaseURL>` is `http://localhost:3000`
@@ -191,11 +189,15 @@ POST `<BaseURL>/api/v1/auth/register`
   "confirmPassword": "string",
   "tos": true
 }
-// On success - User is logged in but user needs to update profile / kyc
-// User obtains default "USER" role 
-// To get "ADMIN" role, sign up with ADMIN_EMAIL specified in .env file
-// "ADMIN" role can add or remove roles from other users
 ```
+
+> On success - User is logged in but user needs to update profile / kyc
+>
+> User obtains default "USER" role
+>
+> To get "ADMIN" role, sign up with ADMIN_EMAIL specified in .env file
+>
+> "ADMIN" role can add or remove roles from other users
 
 #### User Login
 
@@ -226,9 +228,11 @@ PATCH `<BaseURL>/api/v1/user/kyc` _[Requires Authentication]_
   "lastname": "string",
   "bvn": "string",
 }
-// User can update any field but must update at least 1 with request
-// KYC status is updated depending on user profile completing
 ```
+
+> User can update any field but must update at least 1 with request
+>
+> KYC status is updated depending on user profile completing
 
 #### Get / Search List of Banks
 
@@ -245,10 +249,13 @@ POST `<BaseURL>/api/v1/user/accounts` _[Requires Authentication]_
   "bankId": "string",
   "accountNumber": "string",
 }
-// User profile must be complete to add account
-// User must have at least 1 account to deposit, withdraw, transfer
-// User can have multiple accounts
 ```
+
+> User profile must be complete to add account
+>
+> User must have at least 1 account to deposit, withdraw, transfer
+>
+> User can have multiple accounts
 
 #### User Get Own Accounts
 
@@ -263,9 +270,11 @@ POST `<BaseURL>/api/v1/account/<accountId>/deposit` _[Requires Authentication, A
   "amount": 1000000,
   "description": "Saving for the rainy day"
 }
-// User cannot transfer or withdraw with insufficient balance
-// User can only deposit into their own account
 ```
+
+> User cannot transfer or withdraw with insufficient balance
+>
+> User can only deposit into their own account
 
 #### User Withdraw from Own Account
 
@@ -276,8 +285,9 @@ POST `<BaseURL>/api/v1/account/<accountId>/withdraw` _[Requires Authentication, 
   "amount": "number",
   "description": "string"
 }
-// User cannot transfer or withdraw with insufficient balance
 ```
+
+> User cannot transfer or withdraw with insufficient balance
 
 #### User Find other user account
 
@@ -287,9 +297,10 @@ GET `<BaseURL>/api/v1/account/find` _[Requires Authentication, Account Ownership
 {
   "amountNumber": "number",
   "bankId": "string"
-}
-// User needs to find account to get <destinationAccountId>
+} 
 ```
+
+> User needs to find account to get \<destinationAccountId>
 
 #### User Transfer to another Account
 
@@ -300,13 +311,19 @@ POST `<BaseURL>/api/v1/account/<accountId>/transfer` _[Requires Authentication, 
   "destinationAccountId": "string",
   "amount": "number",
   "description": "string",
-  "save": true, // Save destination account as beneficiary
+  "save": true, 
 }
-// User cannot transfer with insufficient balance
-// User cannot transfer to same account
-// Socket event updates both benefactor and recipient for realtime update
-// Unsuccessful transfers will be reversed
 ```
+
+> `save` Saves destination account as beneficiary
+>
+> User cannot transfer with insufficient balance
+>
+> User cannot transfer to same account
+>
+> Socket event updates both benefactor and recipient for realtime update
+>
+> Unsuccessful transfers will be reversed
 
 ### User Get Beneficiary Accounts
 
@@ -316,7 +333,7 @@ GET `<BaseURL>/api/v1/user/beneficiaries`
 
 DELETE `<BaseURL>/api/v1/user/beneficiary/<accountId>`
 
-### Admin Get / Search Users 
+### Admin Get / Search Users
 
 GET `<BaseURL>/api/v1/admin/users` _[Requires Authentication, ADMIN Role]_
 
