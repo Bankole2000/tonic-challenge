@@ -99,7 +99,6 @@ export const checkSufficientBalance = async (req: Request, res: Response, next: 
     return res.status(sr.statusCode).send(sr);
   }
   if (accountExists.balance - amount < 0) {
-    console.log('insufficient funds');
     const sr = new ServiceResponse(
       'Insufficient Funds',
       null,

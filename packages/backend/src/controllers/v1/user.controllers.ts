@@ -47,7 +47,6 @@ export const createNewAccountHandler = async (req: Request, res: Response) => {
   const { accountNumber, bankId } = req.body;
   const { data: existingAccount, error } = await accountService.findBankAccount(bankId, accountNumber);
   if (existingAccount) {
-    console.log({ error });
     const sr = new ServiceResponse(
       `This Account Number with ${existingAccount.bank.name} is already taken`,
       null,
@@ -141,13 +140,11 @@ export const deleteAccountHandler = async (req: Request, res: Response) => {
 
 export const addBeneficiaryAccountHandler = async (req: Request, res: Response) => {
   const sr = new ServiceResponse('Not implemented', null, true, 200, null, null, null, null);
-  console.log({ locals: res.locals });
   return res.status(sr.statusCode).send(sr);
 };
 
 export const removeBeneficiaryAccountHandler = async (req: Request, res: Response) => {
   const sr = new ServiceResponse('Not implemented', null, true, 200, null, null, null, null);
-  console.log({ locals: res.locals });
   return res.status(sr.statusCode).send(sr);
 };
 

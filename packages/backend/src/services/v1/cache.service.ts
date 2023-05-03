@@ -12,7 +12,6 @@ export default class CacheService {
   async cacheUserSession(sessionId: string, sessionData: Session) {
     try {
       const sessionExpiration = parseInt(config.self.refreshTokenTTLMS as string, 10) / 1000;
-      console.log({ sessionExpiration });
       const sessionKey = `${config.self.name}:session:${sessionId}`;
       await this.redis.connect();
       await this.redis.setEx(sessionKey, sessionExpiration, JSON.stringify(sessionData));
@@ -37,9 +36,7 @@ export default class CacheService {
   async cacheTransferTxn(origin: string, destination: string | null, amount: number) {
     try {
       const cacheExpiration = parseInt(config.self.txnCoolDown as string, 10);
-      console.log({ cacheExpiration });
       const txnKey = `${config.self.name}:txn:${origin}:${destination}:${amount}`;
-      console.log({ set: txnKey });
       await this.redis.connect();
       await this.redis.setEx(txnKey, cacheExpiration, JSON.stringify({ origin, destination, amount }));
       await this.redis.disconnect();
@@ -51,7 +48,6 @@ export default class CacheService {
   async getCachedTransferTxn(origin: string, destination: string | null, amount: number) {
     try {
       const txnKey = `${config.self.name}:txn:${origin}:${destination}:${amount}`;
-      console.log({ get: txnKey });
       await this.redis.connect();
       const data = await this.redis.get(txnKey);
       await this.redis.disconnect();

@@ -44,6 +44,5 @@ export const getBanksHandler = async (req: Request, res: Response) => {
     error ? 'Check logs and database' : null,
     res.locals.newAccessToken
   );
-  console.log({ originalUrl: req.originalUrl });
   return res.status(sr.statusCode).send(sr);
 };

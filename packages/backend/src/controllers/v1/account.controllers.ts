@@ -212,7 +212,6 @@ export const transferHandler = async (req: Request, res: Response) => {
   } = await accountService.getAccountDetails(destinationAccountId);
 
   if (!destinationAccount) {
-    console.log({ destinationAccountError });
     const sr = new ServiceResponse(
       'Receiving account does not exist',
       destinationAccount,

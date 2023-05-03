@@ -192,30 +192,25 @@ export const adminAddUserRoleHandler = async (req: Request, res: Response) => {
 
 export const adminSetUserPasswordHandler = async (req: Request, res: Response) => {
   const sr = new ServiceResponse('Not implemented', null, true, 200, null, null, null, null);
-  console.log({ locals: res.locals });
   return res.status(sr.statusCode).send(sr);
 };
 
 export const adminRemoveUserRoleHandler = async (req: Request, res: Response) => {
   const sr = new ServiceResponse('Not implemented', null, true, 200, null, null, null, null);
-  console.log({ locals: res.locals });
   return res.status(sr.statusCode).send(sr);
 };
 
 export const adminDeleteUserHandler = async (req: Request, res: Response) => {
   const sr = new ServiceResponse('Not implemented', null, true, 200, null, null, null, null);
-  console.log({ locals: res.locals });
   return res.status(sr.statusCode).send(sr);
 };
 
 export const adminGetUserAccountsHandler = async (req: Request, res: Response) => {
   const sr = new ServiceResponse('Not implemented', null, true, 200, null, null, null, null);
-  console.log({ locals: res.locals });
   return res.status(sr.statusCode).send(sr);
 };
 
 export const adminGetUserTransactionsHandler = async (req: Request, res: Response) => {
   const sr = new ServiceResponse('Not implemented', null, true, 200, null, null, null, null);
-  console.log({ locals: res.locals });
   return res.status(sr.statusCode).send(sr);
 };

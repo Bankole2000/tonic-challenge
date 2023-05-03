@@ -64,7 +64,6 @@ export const loginHandler = async (req: Request, res: Response) => {
   const { error: tokenError, data: tokens } = await generateTokens({ userId: existingUser.id, sessionId: newSession.id });
 
   if (!tokens) {
-    console.log({ tokenError });
     const sr = serverErrorMessage(tokenError, 500);
     return res.status(sr.statusCode).send(sr);
   }
@@ -134,7 +133,6 @@ export const registerHandler = async (req: Request, res: Response) => {
   const { error: tokenError, data: tokens } = await generateTokens({ userId: newUser.id, sessionId: newSession.id });
 
   if (!tokens) {
-    console.log({ tokenError });
     const sr = serverErrorMessage(tokenError, 500);
     return res.status(sr.statusCode).send(sr);
   }

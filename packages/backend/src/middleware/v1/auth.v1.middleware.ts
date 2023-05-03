@@ -56,7 +56,6 @@ export const requireAccountStatus = (requiredStatus: AccountStatus[]) => async (
 
 export const getUserIfLoggedIn = async (req: Request, res: Response, next: NextFunction) => {
   const token = req.headers.authorization;
-  console.log({ headers: req.headers });
 
   if (!token) {
     const refreshToken = req.cookies?.refreshToken ? req.cookies.refreshToken : req.headers['x-refresh-token'];
@@ -92,7 +91,6 @@ export const getUserIfLoggedIn = async (req: Request, res: Response, next: NextF
     const { error: tokenError, data: refreshedTokens } = await generateTokens({ userId: existingUser.id, sessionId: cachedSession.id });
 
     if (!refreshedTokens) {
-      console.log({ refreshTokensError: tokenError });
       res.locals.user = null;
       return next();
     }
@@ -113,7 +111,6 @@ export const getUserIfLoggedIn = async (req: Request, res: Response, next: NextF
   const {
     valid, decoded, error, expired
   } = await verifyToken(accessToken);
-  console.log({ error, expired, valid });
 
   if (decoded && valid) {
     const { data: existingUser } = await userService.findUserById(decoded.userId);
@@ -126,7 +123,6 @@ export const getUserIfLoggedIn = async (req: Request, res: Response, next: NextF
     const { data: sessionData, error: findSessionError } = await cacheService.getUserSession(decoded.sessionId);
 
     if (!sessionData) {
-      console.log({ findSessionError });
       res.locals.user = null;
       return next();
     }
@@ -175,7 +171,6 @@ export const getUserIfLoggedIn = async (req: Request, res: Response, next: NextF
     const { error: tokenError, data: refreshedTokens } = await generateTokens({ userId: existingUser.id, sessionId: existingSession.id });
 
     if (!refreshedTokens) {
-      console.log({ refreshTokensError: tokenError });
       res.locals.user = null;
       return next();
     }
