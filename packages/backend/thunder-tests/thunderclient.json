@@ -82,11 +82,11 @@
     "colId": "6438f70d-4b04-4696-93f2-f268b2e63e2d",
     "containerId": "bb1fce07-5d0c-4b22-9cba-adfc585f55a9",
     "name": "Get Users",
-    "url": "{{baseUrl}}{{v1Path}}/admin/users?q&page=1&limit=2",
+    "url": "{{baseUrl}}{{v1Path}}/admin/users?q&page=1&limit=10",
     "method": "GET",
     "sortNum": 40000,
     "created": "2023-05-01T06:15:52.643Z",
-    "modified": "2023-05-02T20:08:42.039Z",
+    "modified": "2023-05-04T09:02:35.352Z",
     "headers": [],
     "params": [
       {
@@ -101,7 +101,7 @@
       },
       {
         "name": "limit",
-        "value": "2",
+        "value": "10",
         "isPath": false
       }
     ],
@@ -116,12 +116,12 @@
     "method": "POST",
     "sortNum": 50000,
     "created": "2023-05-01T06:16:06.170Z",
-    "modified": "2023-05-02T23:49:47.658Z",
+    "modified": "2023-05-04T08:43:17.688Z",
     "headers": [],
     "params": [],
     "body": {
       "type": "json",
-      "raw": "{\n  \"email\": \"\",\n  \"password\": \"\",\n  \"confirmPassword\": \"\"\n}",
+      "raw": "{\n  \"email\": \"\",\n  \"password\": \"\",\n  \"confirmPassword\": \"\",\n  \"tos\": \"\"\n}",
       "form": []
     },
     "tests": []
@@ -135,12 +135,12 @@
     "method": "PATCH",
     "sortNum": 60000,
     "created": "2023-05-01T06:16:23.136Z",
-    "modified": "2023-05-02T23:50:55.803Z",
+    "modified": "2023-05-04T09:02:10.468Z",
     "headers": [],
     "params": [
       {
         "name": "userId",
-        "value": "",
+        "value": "1234",
         "isPath": true
       }
     ],
@@ -160,12 +160,12 @@
     "method": "DELETE",
     "sortNum": 70000,
     "created": "2023-05-01T06:16:34.269Z",
-    "modified": "2023-05-02T23:52:53.109Z",
+    "modified": "2023-05-04T09:02:18.259Z",
     "headers": [],
     "params": [
       {
         "name": "userId",
-        "value": "6450c5b3e103539b2a208024",
+        "value": "6450c5b3e103539b2a2080",
         "isPath": true
       }
     ],
@@ -421,12 +421,12 @@
     "method": "GET",
     "sortNum": 210000,
     "created": "2023-05-02T20:11:44.649Z",
-    "modified": "2023-05-02T23:54:51.256Z",
+    "modified": "2023-05-04T09:02:50.817Z",
     "headers": [],
     "params": [
       {
         "name": "userId",
-        "value": "6450c5b3e103539b2a208024",
+        "value": "6450c5b3e103539b2a2080e4",
         "isPath": true
       }
     ],
@@ -441,12 +441,12 @@
     "method": "GET",
     "sortNum": 220000,
     "created": "2023-05-02T20:15:27.507Z",
-    "modified": "2023-05-02T23:55:28.444Z",
+    "modified": "2023-05-04T09:04:03.986Z",
     "headers": [],
     "params": [
       {
         "name": "userId",
-        "value": "6450c5b3e103539b2a208024",
+        "value": "6450c5b3e103539b2a2080e4",
         "isPath": true
       }
     ],
@@ -457,12 +457,14 @@
     "colId": "6438f70d-4b04-4696-93f2-f268b2e63e2d",
     "containerId": "29bb2049-8fe0-449f-b8fc-ec12c42296e9",
     "name": "Get Accounts",
-    "url": "",
+    "url": "{{baseUrl}}{{v1Path}}/admin/accounts",
     "method": "GET",
     "sortNum": 230000,
     "created": "2023-05-02T20:16:55.627Z",
-    "modified": "2023-05-02T20:16:55.627Z",
-    "headers": []
+    "modified": "2023-05-04T09:01:31.095Z",
+    "headers": [],
+    "params": [],
+    "tests": []
   },
   {
     "_id": "2e74fe95-9219-4424-b394-3e82eb4b6add",
@@ -595,7 +597,7 @@
     "method": "POST",
     "sortNum": 340000,
     "created": "2023-05-03T00:01:52.674Z",
-    "modified": "2023-05-03T00:02:07.644Z",
+    "modified": "2023-05-04T08:44:14.685Z",
     "headers": [],
     "params": [
       {
@@ -604,6 +606,11 @@
         "isPath": true
       }
     ],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"role\": \"USER\"\n}",
+      "form": []
+    },
     "tests": []
   },
   {
@@ -611,15 +618,20 @@
     "colId": "6438f70d-4b04-4696-93f2-f268b2e63e2d",
     "containerId": "bb1fce07-5d0c-4b22-9cba-adfc585f55a9",
     "name": "Remove User Role",
-    "url": "{{baseUrl}}{{v1Path}}/admin/users/{userId}/roles",
+    "url": "{{baseUrl}}{{v1Path}}/admin/users/{userId}/roles/{role}",
     "method": "DELETE",
     "sortNum": 350000,
     "created": "2023-05-03T00:02:37.086Z",
-    "modified": "2023-05-03T00:02:43.181Z",
+    "modified": "2023-05-04T08:43:55.219Z",
     "headers": [],
     "params": [
       {
         "name": "userId",
+        "value": "",
+        "isPath": true
+      },
+      {
+        "name": "role",
         "value": "",
         "isPath": true
       }
@@ -650,6 +662,20 @@
     "sortNum": 370000,
     "created": "2023-05-03T00:07:06.696Z",
     "modified": "2023-05-03T00:10:29.353Z",
+    "headers": [],
+    "params": [],
+    "tests": []
+  },
+  {
+    "_id": "9454389c-ade1-466c-8385-18546040a5de",
+    "colId": "6438f70d-4b04-4696-93f2-f268b2e63e2d",
+    "containerId": "bb1fce07-5d0c-4b22-9cba-adfc585f55a9",
+    "name": "Get Roles",
+    "url": "{{baseUrl}}{{v1Path}}/admin/settings/roles",
+    "method": "GET",
+    "sortNum": 380000,
+    "created": "2023-05-04T08:45:08.503Z",
+    "modified": "2023-05-04T08:45:51.262Z",
     "headers": [],
     "params": [],
     "tests": []

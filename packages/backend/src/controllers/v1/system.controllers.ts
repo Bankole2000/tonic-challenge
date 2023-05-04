@@ -1,3 +1,4 @@
+import { UserRoles } from '@prisma/client';
 import { Request, Response } from 'express';
 import { ServiceResponse } from '../../@types/ServiseReponse.type';
 import SystemDBService from '../../services/v1/system.service';
@@ -20,7 +21,9 @@ export const getBanksHandler = async (req: Request, res: Response) => {
   }
 
   if (searchTerm) {
-    const { data, error, code } = await systemService.searchBanks(searchTerm as string, page, limit);
+    const {
+      data, error, code
+    } = await systemService.searchBanks(searchTerm as string, page, limit);
     const sr = new ServiceResponse(
       'Bank search results',
       data,
@@ -42,6 +45,20 @@ export const getBanksHandler = async (req: Request, res: Response) => {
     error ? 'Error Fetching banks' : null,
     error,
     error ? 'Check logs and database' : null,
+    res.locals.newAccessToken
+  );
+  return res.status(sr.statusCode).send(sr);
+};
+
+export const getRolesHandler = async (req: Request, res: Response) => {
+  const sr = new ServiceResponse(
+    'User Roles',
+    Object.values(UserRoles),
+    true,
+    200,
+    null,
+    null,
+    null,
     res.locals.newAccessToken
   );
   return res.status(sr.statusCode).send(sr);

@@ -7,7 +7,6 @@ import { config } from '../../utils/config';
 import { serverErrorMessage } from '../../utils/helpers/utilityFxns';
 import SessionDBService from '../../services/v1/session.service';
 import CacheService from '../../services/v1/cache.service';
-import { isValidObjectId } from '../../utils/helpers/validators';
 
 const userService = new UserDBService();
 const sessionService = new SessionDBService();
@@ -15,7 +14,9 @@ const sessionService = new SessionDBService();
 export const loginHandler = async (req: Request, res: Response) => {
   const cacheService = new CacheService();
   const { email, password } = req.body;
-  const { data: existingUser, error: findUserError, code } = await userService.findUserByEmail(email);
+  const {
+    data: existingUser, error: findUserError, code
+  } = await userService.findUserByEmail(email);
   if (!existingUser) {
     if (code !== 404) {
       const sr = serverErrorMessage(findUserError, code);
@@ -46,7 +47,9 @@ export const loginHandler = async (req: Request, res: Response) => {
     return res.status(sr.statusCode).send(sr);
   }
 
-  const { data: newSession, error: createSessionError, code: createSessionStatusCode } = await sessionService.createUserSession(existingUser.id);
+  const {
+    data: newSession, error: createSessionError, code: createSessionStatusCode
+  } = await sessionService.createUserSession(existingUser.id);
   if (!newSession) {
     const sr = code > 499
       ? serverErrorMessage(createSessionError, createSessionStatusCode)
@@ -61,7 +64,9 @@ export const loginHandler = async (req: Request, res: Response) => {
       );
     return res.status(sr.statusCode).send(sr);
   }
-  const { error: tokenError, data: tokens } = await generateTokens({ userId: existingUser.id, sessionId: newSession.id });
+  const {
+    error: tokenError, data: tokens
+  } = await generateTokens({ userId: existingUser.id, sessionId: newSession.id });
 
   if (!tokens) {
     const sr = serverErrorMessage(tokenError, 500);
@@ -84,7 +89,9 @@ export const loginHandler = async (req: Request, res: Response) => {
 export const registerHandler = async (req: Request, res: Response) => {
   const cacheService = new CacheService();
   const { email, password, tos } = req.body;
-  const { data: existingUser, error: findUserError, code } = await userService.findUserByEmail(email);
+  const {
+    data: existingUser, error: findUserError, code
+  } = await userService.findUserByEmail(email);
   if (existingUser) {
     const sr = new ServiceResponse('This email is already registered', null, false, 400, 'EMAIL_ALREADY_REGISTERED', 'EMAIL_ALREADY_REGISTERED', 'Please register with a new email account');
     return res.status(sr.statusCode).send(sr);
@@ -98,7 +105,9 @@ export const registerHandler = async (req: Request, res: Response) => {
   if (userData.email === config.self.adminEmail) {
     userData.roles = Object.keys(UserRoles) as UserRoles[];
   }
-  const { data: newUser, error: createUserError, code: createUserStatusCode } = await userService.createUser(userData);
+  const {
+    data: newUser, error: createUserError, code: createUserStatusCode
+  } = await userService.createUser(userData);
   if (!newUser) {
     const sr = code > 499
       ? serverErrorMessage(createUserError, createUserStatusCode)
@@ -113,7 +122,9 @@ export const registerHandler = async (req: Request, res: Response) => {
       );
     return res.status(sr.statusCode).send(sr);
   }
-  const { data: newSession, error: createSessionError, code: createSessionStatusCode } = await sessionService.createUserSession(newUser.id);
+  const {
+    data: newSession, error: createSessionError, code: createSessionStatusCode
+  } = await sessionService.createUserSession(newUser.id);
 
   if (!newSession) {
     const sr = code > 499
@@ -130,7 +141,9 @@ export const registerHandler = async (req: Request, res: Response) => {
     return res.status(sr.statusCode).send(sr);
   }
 
-  const { error: tokenError, data: tokens } = await generateTokens({ userId: newUser.id, sessionId: newSession.id });
+  const {
+    error: tokenError, data: tokens
+  } = await generateTokens({ userId: newUser.id, sessionId: newSession.id });
 
   if (!tokens) {
     const sr = serverErrorMessage(tokenError, 500);
@@ -150,7 +163,7 @@ export const registerHandler = async (req: Request, res: Response) => {
   return res.status(sr.statusCode).send(sr);
 };
 
-export const loggedInUserHandler = async (req: Request, res: Response) => {
+export const loggedInUserHandler = async (_req: Request, res: Response) => {
   const { user: userData, session: sessionData } = res.locals;
   if (userData && sessionData) {
     const { password: _, ...user } = userData;

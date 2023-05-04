@@ -20,7 +20,7 @@ export default class SystemDBService {
       const next = pages > 1 && page < pages && page > 0 ? page + 1 : null;
       return {
         data: {
-          data: banks, pages, page, prev, next, total
+          data: banks, pages, page, prev, next, total, limit
         },
         error: null,
         code: 200
@@ -76,7 +76,7 @@ export default class SystemDBService {
       const next = pages > 1 && page < pages && page > 0 ? page + 1 : null;
       return {
         data: {
-          data: banks, searchTerm, pages, prev, next, total, page
+          data: banks, searchTerm, pages, prev, next, total, page, limit
         },
         error: null,
         code: 200

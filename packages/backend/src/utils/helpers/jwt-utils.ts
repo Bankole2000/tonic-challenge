@@ -2,9 +2,16 @@ import JWT from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { config } from '../config';
 
-export const passwordsMatch = (attemptedPassword: string, hashedPassword: string) => bcrypt.compareSync(attemptedPassword, hashedPassword);
+export const passwordsMatch = (
+  attemptedPassword: string,
+  hashedPassword: string
+) => bcrypt.compareSync(attemptedPassword, hashedPassword);
 
-export const signJWT = async (payload: any, secret: string, options?: JWT.SignOptions | undefined) => {
+export const signJWT = async (
+  payload: any,
+  secret: string,
+  options?: JWT.SignOptions | undefined
+) => {
   try {
     return {
       error: null,

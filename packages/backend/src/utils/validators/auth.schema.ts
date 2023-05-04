@@ -45,3 +45,11 @@ export const loginSchema = object({
       .refine((data) => isNotEmpty(data), 'Password cannot be empty'),
   })
 });
+
+export const roleChangeSchema = object({
+  body: object({
+    role: string({
+      required_error: 'You need to specify the role to add / remove'
+    })
+  })
+});

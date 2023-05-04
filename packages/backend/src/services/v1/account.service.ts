@@ -183,7 +183,12 @@ export default class AccountDBService {
     }
   }
 
-  async initiateTransfer(originAccountId: string, destinationAccountId: string, amount: number, description: string | undefined) {
+  async initiateTransfer(
+    originAccountId: string,
+    destinationAccountId: string,
+    amount: number,
+    description: string | undefined
+  ) {
     try {
       const newTransfer = await this.prisma.transfer.create({
         data: {
@@ -260,13 +265,17 @@ export default class AccountDBService {
           transfer: true
         }
       });
-      const total = await this.prisma.transaction.count();
+      const total = await this.prisma.transaction.count({
+        where: {
+          accountId
+        },
+      });
       const pages = Math.ceil(total / limit) || 1;
       const prev = pages > 1 && page <= pages && page > 0 ? page - 1 : null;
       const next = pages > 1 && page < pages && page > 0 ? page + 1 : null;
       return {
         data: {
-          data: transactions, pages, page, prev, next, total
+          data: transactions, pages, page, prev, next, total, limit,
         },
         error: null,
         code: 200
@@ -277,7 +286,13 @@ export default class AccountDBService {
     }
   }
 
-  async searchAccountTransactions(accountId: string, startDate: string, endDate: string, page = 1, limit = 20) {
+  async searchAccountTransactions(
+    accountId: string,
+    startDate: string,
+    endDate: string,
+    page = 1,
+    limit = 20
+  ) {
     try {
       const transactions = await this.prisma.transaction.findMany({
         take: limit,
@@ -299,13 +314,34 @@ export default class AccountDBService {
           transfer: true
         }
       });
-      const total = await this.prisma.transaction.count();
+      const total = await this.prisma.transaction.count({
+        where: {
+          AND: [
+            {
+              accountId,
+            },
+            {
+              createdAt: {
+                gte: new Date(startDate),
+                lte: new Date(endDate),
+              }
+            }
+          ]
+        },
+      });
       const pages = Math.ceil(total / limit) || 1;
       const prev = pages > 1 && page <= pages && page > 0 ? page - 1 : null;
       const next = pages > 1 && page < pages && page > 0 ? page + 1 : null;
       return {
         data: {
-          data: transactions, searchTerm: { startDate, endDate }, pages, page, prev, next, total
+          data: transactions,
+          searchTerm: { startDate, endDate },
+          pages,
+          page,
+          prev,
+          next,
+          total,
+          limit
         },
         error: null,
         code: 200
@@ -338,7 +374,106 @@ export default class AccountDBService {
       const next = pages > 1 && page < pages && page > 0 ? page + 1 : null;
       return {
         data: {
-          data: accounts, pages, page, prev, next, total
+          data: accounts, pages, page, prev, next, total, limit
+        },
+        error: null,
+        code: 200
+      };
+    } catch (error: any) {
+      console.log({ error });
+      return { data: null, error, code: 500 };
+    }
+  }
+
+  async searchAllAccounts(searchTerm: string, page = 1, limit = 25) {
+    try {
+      const accounts = await this.prisma.account.findMany({
+        take: limit,
+        skip: (page - 1) * limit,
+        where: {
+          OR: [
+            {
+              user: {
+                OR: [
+                  {
+                    firstname: {
+                      contains: searchTerm,
+                      mode: 'insensitive'
+                    },
+                    lastname: {
+                      contains: searchTerm,
+                      mode: 'insensitive'
+                    },
+                    email: {
+                      contains: searchTerm,
+                      mode: 'insensitive'
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              bank: {
+                name: {
+                  contains: searchTerm,
+                  mode: 'insensitive'
+                }
+              }
+            }
+          ]
+        },
+        include: {
+          user: true,
+          bank: true,
+          _count: {
+            select: {
+              receivedTransfers: true,
+              sentTransfers: true,
+              transactions: true
+            }
+          }
+        }
+      });
+      const total = await this.prisma.account.count({
+        where: {
+          OR: [
+            {
+              user: {
+                OR: [
+                  {
+                    firstname: {
+                      contains: searchTerm,
+                      mode: 'insensitive'
+                    },
+                    lastname: {
+                      contains: searchTerm,
+                      mode: 'insensitive'
+                    },
+                    email: {
+                      contains: searchTerm,
+                      mode: 'insensitive'
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              bank: {
+                name: {
+                  contains: searchTerm,
+                  mode: 'insensitive'
+                }
+              }
+            }
+          ]
+        },
+      });
+      const pages = Math.ceil(total / limit) || 1;
+      const prev = pages > 1 && page <= pages && page > 0 ? page - 1 : null;
+      const next = pages > 1 && page < pages && page > 0 ? page + 1 : null;
+      return {
+        data: {
+          data: accounts, searchTerm, pages, page, prev, next, total, limit
         },
         error: null,
         code: 200

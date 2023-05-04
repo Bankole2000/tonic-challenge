@@ -42,7 +42,9 @@ export const getAccountDetailsHandler = async (req: Request, res: Response) => {
 
 export const findUserAccountHandler = async (req: Request, res: Response) => {
   const { bankId, accountNumber } = req.body;
-  const { data: foundAccount, error, code } = await accountService.findBankAccount(bankId, accountNumber);
+  const {
+    data: foundAccount, error, code
+  } = await accountService.findBankAccount(bankId, accountNumber);
   if (!foundAccount) {
     const sr = code > 499
       ? serverErrorMessage(error, code)
@@ -99,7 +101,9 @@ export const getAccountTransactionsHandler = async (req: Request, res: Response)
     toDate = new Date(to as string).toISOString();
   }
   if (fromDate) {
-    const { code, data, error } = await accountService.searchAccountTransactions(accountId, fromDate, toDate, page, limit);
+    const {
+      code, data, error
+    } = await accountService.searchAccountTransactions(accountId, fromDate, toDate, page, limit);
     const sr = new ServiceResponse(
       'Transaction Search Results',
       data,
@@ -202,7 +206,7 @@ export const transferHandler = async (req: Request, res: Response) => {
       false,
       422,
       'Origin and Destination accounts are the same',
-      'INVALID_TRANSFER_ORIGIN_DESTINATION_SAME',
+      'INVALID_TRANSFER_DESTINATION',
       'You can only transfer from an account to a different account',
       res.locals.newAccessToken
     );
@@ -280,7 +284,7 @@ export const transferHandler = async (req: Request, res: Response) => {
       null,
       false,
       creditStatusCode,
-      'Error crediting sender account',
+      'Error crediting receiving account',
       creditError,
       'Please check transfer inputs',
       res.locals.newAccessToken
@@ -288,7 +292,7 @@ export const transferHandler = async (req: Request, res: Response) => {
     return res.status(sr.statusCode).send(sr);
   }
 
-  // Update Transaction status to successful
+  // Update Transfer status to successful
   const { data: completedTransfer, code: transferStatusCode, error: transferError } = await accountService.updateTransferStatus(newTransfer.id, 'SUCCESSFUL');
   if (completedTransfer) {
     // Update Clients in realtime

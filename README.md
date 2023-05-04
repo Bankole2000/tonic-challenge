@@ -26,7 +26,7 @@ This Repository constitutes a body of work representing my solution to the asses
   - A runnable function file and working endpoint for __Test 1__.
   - Implementation of a __Backend API__ as my solution for __Test 2__ and __Take Aways__
   - __Api Collections__ for testing on both local and staging environments
-  - [__Live Demo__](https://tonic-backend-api.up.railway.app/health-check) for remote testing
+  - [__Live Demo__](https://tonic-backend-api.up.railway.app/) for remote testing
   - __Setup__ for running on different environments - __Dev__ on __Local / Computer__ or with __Docker__
   - __(Incomplete - WIP)__ Frontend client for working with the API
 
@@ -61,16 +61,16 @@ This Repository constitutes a body of work representing my solution to the asses
   - [x] Commit linting for standardized commit messages
   - [x] SocketIO for realtime updates on Transfers / Transactions
   - [x] Monorepo to run frontend client and api concurrently on local
-  - [x] ThunderClient Collection for in IDE api testing.
+  - [x] [ThunderClient](https://www.thunderclient.com/) Collection for in IDE api testing.
   - [x] Github Issues, bug reports, task, and feature request templates setup for convenient issue reporting / issue driven development.
 
 ## How to Test
 
-- To Test the [running demo api](https://tonic-backend-api.up.railway.app/heath-check) download and import [this collection](https://drive.google.com/file/d/1aljJV3wdEl4is6-6EUNwsdaZwKt05mV-/view?usp=sharing) and [this environment](https://drive.google.com/file/d/1qK9LvqpVuVvp2hHSWRC4IIRTDw5f4xBX/view?usp=sharing) into Postman.
+- To Test the [running demo api](https://tonic-backend-api.up.railway.app/health-check) download and import [this collection](https://drive.google.com/file/d/1aljJV3wdEl4is6-6EUNwsdaZwKt05mV-/view?usp=sharing) and [this environment](https://drive.google.com/file/d/1qK9LvqpVuVvp2hHSWRC4IIRTDw5f4xBX/view?usp=sharing) into Postman. Signup with `admin@test.com` to get the `ADMIN` role
 
-- To Test locally, clone the repository and follow the steps in either [Running with Docker](#running-with-docker) or [Running On Local](#running-locally) or  to run on those environments respectively. Download and import the aforementioned collection and environment into postman, but change the `baseurl` environment variable to `http://localhost:3000`
+- To Test locally, clone the repository and follow the steps in either [Running with Docker](#running-with-docker) or [Running On Local](#running-locally) to run on those environments respectively. Download and import the aforementioned collection and environment into postman, but change the `baseurl` environment variable to `http://localhost:3000` . To get the `ADMIN` role, signup with the email you specify in the `.env` file. See [`.env.example`](./packages/backend/.env.example)
 
-> N.B 1: a few `/admin` endpoints have not been implemented yet (i.e. are work-in-progress) but are outside of the scope of the assessment. They were just to make the api more robust
+> N.B 1: a few `/api/v1/admin` endpoints have not been implemented yet (i.e. are work-in-progress) but are outside of the scope of the assessment. They were just to make the api more robust
 
 > N.B 2: I intended to build a VueJS frontend client but was unable to due to the time constraints (again, outside the assessment scope - was just to have a browser client to interact with the api)
 
@@ -86,20 +86,24 @@ Requirements:
 
 Steps:
 
-- Clone / download this repository
+- Clone or download this repository
 - In a terminal / CLI, navigate to the root folder of the project
 - Run `docker-compose up -d`
-- You might need to wait a bit for the docker images to be pulled / built. Please watch the logs to confirm when this process is complete.
-- Visit `http://localhost:3000/health-check` in a browser (or make a GET request) to confirm the backend-api is running
+- You might need to wait a bit for the docker images to be pulled + built. Please watch the logs to confirm when this process is complete.
+- If the build fails, this is most likely due to an interruption in the internet connection. Simply try again by running `docker-compose up -d`
+- Visit `http://localhost:3000` in a browser (or make a GET request) to confirm the backend-api is running
 - Visit `http://localhost:8080` in a browser to confirm the frontend client is running
+- To shutdown the servers, run `docker-compose down`
 
 ### Running Locally
 
 Requirements:
 
 - NodeJS installed (version 16.13.1)
-- A Mongodb database running locally
-- A Redis instace running locally
+- Mongodb
+- Redis
+
+> For the Mongodb DATABASE_URL please follow the example in `/packages/backend/.env.example` or the `docker-compose` file
 
 Steps:
 
@@ -140,13 +144,41 @@ The project was built with
 - NodeJS version 16.13.1
 - MongoDB
 - Redis
-- Prisma ORM (Mongodb Connector);
+- [Prisma ORM](https://www.prisma.io/docs/concepts/database-connectors/mongodb) (Mongodb Connector);
+
+### Backend API Folder Structure
+
+Contents of the `/packages/backend` folder
+
+```bash
+.
+├── dockerfile
+├── # node_modules
+├── nodemon.json
+├── package.json
+├── prisma
+│   └── schema.prisma  # Db Schema
+├── src
+│   ├── @types       # custom types + interfaces
+│   ├── controllers  # Enpoint request handlers (versioned)
+│   ├── lib          # For singleton connectors
+│   ├── middleware   # access control, request validation etc (versioned)
+│   ├── routes       # routes (versioned)
+│   ├── services     # Database access classes (versioned)
+│   ├── utils        # helpers, validators, utility functions
+│   ├── app.ts       # Server setup
+│   └── index.ts     # entry point
+├── thunder-tests    # For use with Thunder client vscode extension
+└── tsconfig.json
+```
+
+To use the Thunder-tests, open the `/packages/backend` folder in vscode, and install + open the [Thunderclient Extension](https://www.thunderclient.com/)
 
 ### Application Logic + Flow
 
 All requests are made in JSON format
 
-All responses are instances of the [`ServiceResponse`](./packages/backend/src/%40types/ServiseReponse.type.ts). The gist of it is as follows:
+All responses are instances of the [`ServiceResponse`](./packages/backend/src/%40types/ServiseReponse.type.ts) Class. The gist of it is as follows:
 
 ```ts
 type ServiceResponse {
@@ -154,7 +186,7 @@ type ServiceResponse {
   message: string, 
   // any data that may be returned
   data: any, 
-  // was the request successful for the purpose
+  // was the request successful for the intended purpose
   success: boolean, 
   // reponse http status code,
   statusCode: number, 
@@ -191,12 +223,14 @@ POST `<BaseURL>/api/v1/auth/register`
 }
 ```
 
-> On success - User is logged in but user needs to update profile / kyc
+> On success - User is logged in but needs to update profile / kyc
 >
 > User obtains default "USER" role
 >
 > To get "ADMIN" role, sign up with ADMIN_EMAIL specified in .env file
 >
+> ADMIN_EMAIL in the live demo is 'admin@test.com'
+> 
 > "ADMIN" role can add or remove roles from other users
 
 #### User Login

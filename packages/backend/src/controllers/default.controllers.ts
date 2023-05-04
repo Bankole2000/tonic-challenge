@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
 import { ServiceResponse } from '../@types/ServiseReponse.type';
 
-export const defaultHandler = async (req: Request, res: Response) => {
+export const defaultHandler = async (_req: Request, res: Response) => {
   const sr = new ServiceResponse('Not yet implemented', null, true, 200, null, null, null);
   return res.status(sr.statusCode).send(sr);
 };
 
-export const healthCheckHandler = async (req: Request, res: Response) => {
+export const healthCheckHandler = async (_req: Request, res: Response) => {
   const sr = new ServiceResponse('Health Check', null, true, 200, null, null, null,);
   return res.status(sr.statusCode).send(sr);
 };
@@ -16,7 +16,7 @@ export const routeNotFoundHandler = async (req: Request, res: Response) => {
   return res.status(sr.statusCode).send(sr);
 };
 
-export const welcomeRouteHandler = async (req: Request, res: Response) => {
+export const welcomeRouteHandler = async (_req: Request, res: Response) => {
   const sr = new ServiceResponse('Welcome to the tonic technologies demo api', {
     github: 'https://github.com/Bankole2000/tonic-challenge',
     demo: 'https://tonic-backend-api.up.railway.app'

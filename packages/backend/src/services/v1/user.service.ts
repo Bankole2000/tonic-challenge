@@ -102,7 +102,7 @@ export default class UserDBService {
       const next = pages > 1 && page < pages && page > 0 ? page + 1 : null;
       return {
         data: {
-          data: users, pages, page, prev, next, total
+          data: users, pages, page, prev, next, total, limit
         },
         error: null,
         code: 200
@@ -183,7 +183,7 @@ export default class UserDBService {
       const next = pages > 1 && page < pages && page > 0 ? page + 1 : null;
       return {
         data: {
-          data: users, pages, page, searchTerm, prev, next, total
+          data: users, pages, page, searchTerm, prev, next, total, limit
         },
         error: null,
         code: 200
@@ -312,7 +312,7 @@ export default class UserDBService {
       const next = pages > 1 && page < pages && page > 0 ? page + 1 : null;
       return {
         data: {
-          data: txns, pages, page, prev, next, total
+          data: txns, pages, page, prev, next, total, limit
         },
         error: null,
         code: 200
@@ -323,7 +323,13 @@ export default class UserDBService {
     }
   }
 
-  async searchUserTransactions(userId: string, startDate: string, endDate: string, page = 1, limit = 12) {
+  async searchUserTransactions(
+    userId: string,
+    startDate: string,
+    endDate: string,
+    page = 1,
+    limit = 12
+  ) {
     try {
       const txns = await this.prisma.transaction.findMany({
         take: limit,
@@ -377,7 +383,7 @@ export default class UserDBService {
       const next = pages > 1 && page < pages && page > 0 ? page + 1 : null;
       return {
         data: {
-          data: txns, searchTerm: { startDate, endDate }, pages, page, prev, next, total
+          data: txns, searchTerm: { startDate, endDate }, pages, page, prev, next, total, limit
         },
         error: null,
         code: 200
@@ -459,7 +465,7 @@ export default class UserDBService {
       const next = pages > 1 && page < pages && page > 0 ? page + 1 : null;
       return {
         data: {
-          data: beneficiaries, pages, page, prev, next, total
+          data: beneficiaries, pages, page, prev, next, total, limit
         },
         error: null,
         code: 200
@@ -556,7 +562,7 @@ export default class UserDBService {
       const next = pages > 1 && page < pages && page > 0 ? page + 1 : null;
       return {
         data: {
-          data: beneficiaries, pages, page, prev, next, total
+          data: beneficiaries, pages, page, prev, next, total, limit
         },
         error: null,
         code: 200
@@ -590,6 +596,23 @@ export default class UserDBService {
         return { data: deletedBeneficiary, error: null, code: 201 };
       }
       return { data: beneficiaryExists, error: 'Beneficiary not found', code: 404 };
+    } catch (error: any) {
+      console.log({ error });
+      return { data: null, error, code: 500 };
+    }
+  }
+
+  async deleteUser(userId: string) {
+    try {
+      const deletedUser = await this.prisma.user.delete({
+        where: {
+          id: userId,
+        }
+      });
+      if (deletedUser) {
+        return { data: deletedUser, error: null, code: 201 };
+      }
+      return { data: deletedUser, error: 'Error deleting user', code: 400 };
     } catch (error: any) {
       console.log({ error });
       return { data: null, error, code: 500 };

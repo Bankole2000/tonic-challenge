@@ -6,6 +6,7 @@ import { ServiceResponse } from '../../../@types/ServiseReponse.type';
 const accountService = new AccountDBService();
 
 export const adminGetAccountsHandler = async (req: Request, res: Response) => {
+  const { q: searchTerm } = req.query;
   let limit: number;
   let page: number;
   if (parseInt(req.query.limit as string, 10)) {
@@ -17,6 +18,37 @@ export const adminGetAccountsHandler = async (req: Request, res: Response) => {
     page = parseInt(req.query.page as string, 10);
   } else {
     page = 1;
+  }
+  if (searchTerm) {
+    const {
+      data: searchResults, error, code
+    } = await accountService.searchAllAccounts(searchTerm as string, page, limit);
+    if (error) {
+      const sr = code > 499
+        ? serverErrorMessage(error, code)
+        : new ServiceResponse(
+          'An error occured searching accounts',
+          null,
+          false,
+          code,
+          error ?? 'Search Accounts error',
+          error,
+          'Check logs and database',
+          res.locals.newAccessToken
+        );
+      return res.status(sr.statusCode).send(sr);
+    }
+    const sr = new ServiceResponse(
+      'Account search results',
+      searchResults,
+      true,
+      code,
+      null,
+      null,
+      null,
+      res.locals.newAccessToken
+    );
+    return res.status(sr.statusCode).send(sr);
   }
   const { data: results, error, code } = await accountService.getAllAccounts(page, limit);
   const sr = error

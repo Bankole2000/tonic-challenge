@@ -21,11 +21,11 @@
       },
       {
         "name": "accessToken",
-        "value": ""
+        "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDUwYTdiYjE5OWE2MWUxMWU0MjRiMDIiLCJzZXNzaW9uSWQiOiI2NDUzNzJlZDljMTcyMDY2NDM2OTMzZGUiLCJpYXQiOjE2ODMxOTA1MDksImV4cCI6MTY4MzE5MTQwOX0.nHsxR6cZDB7EujMJ1LXyK2vMZ1PEFUZFmcmVt2S7Fuo"
       },
       {
         "name": "refreshToken",
-        "value": ""
+        "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDUwYTdiYjE5OWE2MWUxMWU0MjRiMDIiLCJzZXNzaW9uSWQiOiI2NDUzNzJlZDljMTcyMDY2NDM2OTMzZGUiLCJpYXQiOjE2ODMxOTA1MDksImV4cCI6MTY4MzI3NjkwOX0.MNh95uie2lrPJbubBlfEVm710nR9iU5WVyPNYn7eYIM"
       }
     ]
   },

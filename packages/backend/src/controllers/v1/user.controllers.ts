@@ -45,7 +45,9 @@ export const getUserAccountsHandler = async (req: Request, res: Response) => {
 export const createNewAccountHandler = async (req: Request, res: Response) => {
   const { user } = res.locals;
   const { accountNumber, bankId } = req.body;
-  const { data: existingAccount, error } = await accountService.findBankAccount(bankId, accountNumber);
+  const {
+    data: existingAccount,
+  } = await accountService.findBankAccount(bankId, accountNumber);
   if (existingAccount) {
     const sr = new ServiceResponse(
       `This Account Number with ${existingAccount.bank.name} is already taken`,
@@ -59,7 +61,9 @@ export const createNewAccountHandler = async (req: Request, res: Response) => {
     );
     return res.status(sr.statusCode).send(sr);
   }
-  const { data: newAccount, error: accountCreateError, code: accountCreateStatusCode } = await accountService.createUserAccount(accountNumber, bankId, user.id);
+  const {
+    data: newAccount, error: accountCreateError, code: accountCreateStatusCode
+  } = await accountService.createUserAccount(accountNumber, bankId, user.id);
   if (!newAccount) {
     const sr = new ServiceResponse(
       'There was an error creating your account',
@@ -73,9 +77,14 @@ export const createNewAccountHandler = async (req: Request, res: Response) => {
     );
     return res.status(sr.statusCode).send(sr);
   }
-  const { data: updatedProfileStatus, code: profileStatusCode } = await userService.setUserAccountStatus(user.id);
+  const {
+    data: updatedProfileStatus, code: profileStatusCode
+  } = await userService.setUserAccountStatus(user.id);
+
   if (profileStatusCode === 201 && updatedProfileStatus) {
-    const { data: updatedSession } = await sessionService.getUserSession(res.locals.session.id, user.id);
+    const {
+      data: updatedSession
+    } = await sessionService.getUserSession(res.locals.session.id, user.id);
     if (updatedSession) {
       const cacheService = new CacheService();
       await cacheService.cacheUserSession(updatedSession.id, updatedSession);
@@ -115,9 +124,13 @@ export const deleteAccountHandler = async (req: Request, res: Response) => {
       );
     res.status(sr.statusCode).send(sr);
   }
-  const { data: updatedProfileStatus, code: profileStatusCode } = await userService.setUserAccountStatus(user.id);
+  const {
+    data: updatedProfileStatus, code: profileStatusCode
+  } = await userService.setUserAccountStatus(user.id);
   if (profileStatusCode === 201 && updatedProfileStatus) {
-    const { data: updatedSession } = await sessionService.getUserSession(res.locals.session.id, user.id);
+    const {
+      data: updatedSession
+    } = await sessionService.getUserSession(res.locals.session.id, user.id);
     if (updatedSession) {
       const cacheService = new CacheService();
       await cacheService.cacheUserSession(updatedSession.id, updatedSession);
@@ -199,7 +212,9 @@ export const updateProfileHandler = async (req: Request, res: Response) => {
       profileData[field] = req.body[field];
     }
   });
-  const { data: updatedProfile, error: profileUpdateError, code: profileUpdateStatusCode } = await userService.updateUserProfile(res.locals.user.id, profileData);
+  const {
+    data: updatedProfile, error: profileUpdateError, code: profileUpdateStatusCode
+  } = await userService.updateUserProfile(res.locals.user.id, profileData);
   if (!updatedProfile) {
     const sr = new ServiceResponse(
       'There was an error updating your profile',
@@ -213,7 +228,9 @@ export const updateProfileHandler = async (req: Request, res: Response) => {
     );
     return res.status(sr.statusCode).send(sr);
   }
-  const { data: updatedProfileStatus, code: profileStatusCode, error: profileStatusError } = await userService.setUserAccountStatus(res.locals.user.id);
+  const {
+    data: updatedProfileStatus, code: profileStatusCode, error: profileStatusError
+  } = await userService.setUserAccountStatus(res.locals.user.id);
   if (!updatedProfileStatus) {
     const sr = new ServiceResponse(
       'There was an error updating your profile',
@@ -228,7 +245,9 @@ export const updateProfileHandler = async (req: Request, res: Response) => {
     return res.status(sr.statusCode).send(sr);
   }
   if (profileStatusCode === 201) {
-    const { data: updatedSession } = await sessionService.getUserSession(res.locals.session.id, res.locals.user.id);
+    const {
+      data: updatedSession
+    } = await sessionService.getUserSession(res.locals.session.id, res.locals.user.id);
     if (updatedSession) {
       const cacheService = new CacheService();
       await cacheService.cacheUserSession(updatedSession.id, updatedSession);
@@ -276,7 +295,9 @@ export const getUserTransactionsHandler = async (req: Request, res: Response) =>
     toDate = new Date(to as string).toISOString();
   }
   if (fromDate) {
-    const { data: searchResults, error, code } = await userService.searchUserTransactions(user.id, fromDate, toDate, page, limit);
+    const {
+      data: searchResults, error, code
+    } = await userService.searchUserTransactions(user.id, fromDate, toDate, page, limit);
     const sr = code > 299
       ? serverErrorMessage(error, code)
       : new ServiceResponse(
@@ -291,7 +312,9 @@ export const getUserTransactionsHandler = async (req: Request, res: Response) =>
       );
     return res.status(sr.statusCode).send(sr);
   }
-  const { data: results, error, code } = await userService.getUserTransactions(user.id, page, limit);
+  const {
+    data: results, error, code
+  } = await userService.getUserTransactions(user.id, page, limit);
   const sr = code > 299
     ? serverErrorMessage(error, code)
     : new ServiceResponse(

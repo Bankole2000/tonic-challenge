@@ -2,16 +2,15 @@ import { Request, Response, NextFunction } from 'express';
 import { AccountStatus, UserRoles } from '@prisma/client';
 import { ServiceResponse } from '../../@types/ServiseReponse.type';
 import { generateTokens, verifyToken } from '../../utils/helpers/jwt-utils';
-import { config } from '../../utils/config';
 import UserDBService from '../../services/v1/user.service';
 import CacheService from '../../services/v1/cache.service';
-import SessionDBService from '../../services/v1/session.service';
 
 const userService = new UserDBService();
-const sessionService = new SessionDBService();
 const cacheService = new CacheService();
 
-export const requireRole = (roles: UserRoles[]) => (req: Request, res: Response, next: NextFunction) => {
+export const requireRole = (
+  roles: UserRoles[]
+) => (_req: Request, res: Response, next: NextFunction) => {
   const { user } = res.locals;
   if (!user) {
     const sr = new ServiceResponse('Unauthenticated', null, false, 401, 'Unauthenticated', 'USER_NOT_AUTHENTICATED', 'You need to be Logged in to perform this action');
@@ -25,7 +24,7 @@ export const requireRole = (roles: UserRoles[]) => (req: Request, res: Response,
   return next();
 };
 
-export const requireLoggedInUser = async (req: Request, res: Response, next: NextFunction) => {
+export const requireLoggedInUser = async (_req: Request, res: Response, next: NextFunction) => {
   if (!res.locals.user) {
     const sr = new ServiceResponse(
       'Unauthenticated',
@@ -41,7 +40,9 @@ export const requireLoggedInUser = async (req: Request, res: Response, next: Nex
   return next();
 };
 
-export const requireAccountStatus = (requiredStatus: AccountStatus[]) => async (req: Request, res: Response, next: NextFunction) => {
+export const requireAccountStatus = (
+  requiredStatus: AccountStatus[]
+) => async (_req: Request, res: Response, next: NextFunction) => {
   const { user } = res.locals;
   if (!user) {
     const sr = new ServiceResponse('Unauthenticated', null, false, 401, 'Unauthenticated', 'USER_NOT_AUTHENTICATED', 'You need to be Logged in to perform this action');
@@ -88,7 +89,9 @@ export const getUserIfLoggedIn = async (req: Request, res: Response, next: NextF
 
     res.locals.user = existingUser;
     res.locals.session = cachedSession;
-    const { error: tokenError, data: refreshedTokens } = await generateTokens({ userId: existingUser.id, sessionId: cachedSession.id });
+    const {
+      data: refreshedTokens
+    } = await generateTokens({ userId: existingUser.id, sessionId: cachedSession.id });
 
     if (!refreshedTokens) {
       res.locals.user = null;
@@ -109,7 +112,7 @@ export const getUserIfLoggedIn = async (req: Request, res: Response, next: NextF
     return next();
   }
   const {
-    valid, decoded, error, expired
+    valid, decoded, expired
   } = await verifyToken(accessToken);
 
   if (decoded && valid) {
@@ -120,7 +123,9 @@ export const getUserIfLoggedIn = async (req: Request, res: Response, next: NextF
       return next();
     }
 
-    const { data: sessionData, error: findSessionError } = await cacheService.getUserSession(decoded.sessionId);
+    const {
+      data: sessionData,
+    } = await cacheService.getUserSession(decoded.sessionId);
 
     if (!sessionData) {
       res.locals.user = null;
@@ -168,7 +173,9 @@ export const getUserIfLoggedIn = async (req: Request, res: Response, next: NextF
       return next();
     }
 
-    const { error: tokenError, data: refreshedTokens } = await generateTokens({ userId: existingUser.id, sessionId: existingSession.id });
+    const {
+      data: refreshedTokens
+    } = await generateTokens({ userId: existingUser.id, sessionId: existingSession.id });
 
     if (!refreshedTokens) {
       res.locals.user = null;

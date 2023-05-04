@@ -19,7 +19,7 @@ export const updateProfileSchema = object({
       invalid_type_error: 'BVN must be a string'
     }).min(11, 'BVN must be 11 characters long')
       .max(11, 'BVN must be 11 characters long')
-      .refine((data) => isNumbersOnly(data), 'BVN must be numbers')
+      .refine((data) => isNumbersOnly(data), 'BVN must be numbers only')
       .optional()
-  }).refine((data) => !!Object.keys(data).length, '')
+  }).refine((data) => !!Object.keys(data).length, 'You need to provide at least one field to update')
 });

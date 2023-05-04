@@ -1,9 +1,6 @@
 import { Request, Response } from 'express';
 import { ServiceResponse } from '../../@types/ServiseReponse.type';
 import UserDBService from '../../services/v1/user.service';
-import {
-  generateTokens, hashPassword, passwordsMatch, signJWT
-} from '../../utils/helpers/jwt-utils';
 
 const userService = new UserDBService();
 
