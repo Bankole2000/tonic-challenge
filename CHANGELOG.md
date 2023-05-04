@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/Bankole2000/tonic-challenge/compare/v1.1.2...v1.2.0) (2023-05-04)
+
+
+### Features
+
+* **admin:** admin can manage users ([e877f0b](https://github.com/Bankole2000/tonic-challenge/commit/e877f0b0ad0abe0bb57325ce2f0306646cf6918a))
+
+
+### Bug Fixes
+
+* **linting:** removed unnecessary git add in linting-stage ([855e155](https://github.com/Bankole2000/tonic-challenge/commit/855e1558ffd632ed8524083e5ae2a65ad1a7b320))
+
 ### [1.1.2](https://github.com/Bankole2000/tonic-challenge/compare/v1.1.1...v1.1.2) (2023-05-03)
 
 
