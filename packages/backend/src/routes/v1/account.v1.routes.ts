@@ -3,7 +3,12 @@ import { preventDuplicateTxn } from '../../middleware/v1/cache.v1.middleware';
 import { defaultHandler } from '../../controllers/default.controllers';
 import { checkSufficientBalance, checkUserOwnsAccount } from '../../middleware/v1/account.v1.middleware';
 import {
-  accountDepositHandler, accountWithdrawalHandler, findUserAccountHandler, getAccountDetailsHandler, getAccountTransactionsHandler, transferHandler
+  accountDepositHandler,
+  accountWithdrawalHandler,
+  findUserAccountHandler,
+  getAccountDetailsHandler,
+  getAccountTransactionsHandler,
+  transferHandler
 } from '../../controllers/v1/account.controllers';
 import { validate } from '../../middleware/v1/zodValidate.v1.middleware';
 import {

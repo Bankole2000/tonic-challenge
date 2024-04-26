@@ -3,7 +3,7 @@ import { isValidDate } from './validators';
 export const isBoolean = (val: any) => Boolean(val) === val;
 
 export const sanitizeData = (fields: string[], data: any) => {
-  const sanitizedData: { [key: string]: any } = {};
+  const sanitizedData: { [key: string]: unknown } = {};
   fields.forEach((field) => {
     if (isBoolean(data[field])) {
       sanitizedData[field] = data[field];

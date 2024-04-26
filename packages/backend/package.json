@@ -29,6 +29,7 @@
     "redis": "^4.6.6",
     "socket.io": "^4.6.1",
     "standard-version": "^9.5.0",
+    "uuidv4": "^6.2.13",
     "zod": "^3.21.4"
   },
   "devDependencies": {

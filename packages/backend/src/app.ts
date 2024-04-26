@@ -1,5 +1,7 @@
 import express from 'express';
 import cors from 'cors';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { uuid } from 'uuidv4';
 import cookieParser from 'cookie-parser';
 import rateLimit from 'express-rate-limit';
 import apiRouter from './routes/index.routes';
@@ -24,6 +26,10 @@ app.use('/api', apiRateLimit, apiRouter);
 app.get('/health-check', healthCheckHandler);
 app.get('/fizz-buzz', fizzBuzzHandler);
 app.get('/', welcomeRouteHandler);
+app.get('/uuid', async (req, res) => {
+  const id = uuid();
+  return res.send({ id });
+});
 app.use('*', routeNotFoundHandler);
 
 export { app };

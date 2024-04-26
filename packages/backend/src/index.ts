@@ -25,6 +25,6 @@ io.on('connection', (socket) => {
 });
 
 httpServer.listen(PORT, async () => {
-  await seedBankData();
+  // await seedBankData();
   logger.info(`Tonic API running on port ${PORT}`);
 });
